@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rebelarte — en construcción</title>
+  <meta name="description" content="Rebelarte, el portal gratuito para promocionar a artistas y sus obras, vuelve pronto.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Rebelarte — en construcción">
+  <meta property="og:description" content="El portal gratuito para promocionar a artistas y sus obras vuelve pronto.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rebelarte.com/">
+  <link rel="canonical" href="https://rebelarte.com/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --bg: #f6f1e7;
+      --fg: #1c1a17;
+      --muted: #6b645a;
+      --accent: #c8321e;
+      --line: #d9d0c0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14120f;
+        --fg: #f2ece0;
+        --muted: #a1988a;
+        --accent: #ff5a3c;
+        --line: #332e27;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Georgia, "Times New Roman", serif;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    main {
+      display: grid;
+      align-content: center;
+      padding: 48px 24px;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .estado {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 20px;
+    }
+    h1 {
+      font-size: clamp(3rem, 14vw, 7rem);
+      line-height: 0.95;
+      margin: 0 0 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      overflow-wrap: anywhere;
+    }
+    h1 span { color: var(--accent); }
+    p { font-size: 1.2rem; line-height: 1.55; margin: 0 0 14px; max-width: 34em; }
+    p.en { color: var(--muted); font-style: italic; font-size: 1.05rem; }
+    .ramas {
+      list-style: none;
+      padding: 20px 0 0;
+      margin: 28px 0 0;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    footer {
+      padding: 20px 24px;
+      text-align: center;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="estado">En construcción</p>
+    <h1>Rebel<span>arte</span></h1>
+    <p>El portal gratuito para promocionar a artistas y sus obras está volviendo. Estamos reconstruyéndolo desde cero.</p>
+    <p class="en" lang="en">The free portal for promoting artists and their work is coming back. We are rebuilding it from scratch.</p>
+    <ul class="ramas" aria-label="Ramas">
+      <li>Plásticas</li>
+      <li>Textos</li>
+      <li>Escénicas</li>
+      <li>Sonido</li>
+      <li>Audiovisuales</li>
+    </ul>
+  </main>
+  <footer>Rebelarte · Córdoba · desde 2006</footer>
+</body>
+</html>

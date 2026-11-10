@@ -1,0 +1,13 @@
+{
+  "name": "rebelarte",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Portal gratuito para promocionar a artistas y sus obras",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
