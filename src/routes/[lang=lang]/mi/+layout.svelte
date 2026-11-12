@@ -88,7 +88,8 @@
 {/if}
 
 <style>
-  .shell { display: grid; gap: var(--space-4); padding-top: var(--space-4); }
+  .shell { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); padding-top: var(--space-4); }
+  .side { min-width: 0; }
   .who { display: none; }
   nav ul { list-style: none; margin: 0; padding: 0 0 var(--space-2); display: flex; gap: var(--space-1); overflow-x: auto; scrollbar-width: thin; }
   nav a, nav button { display: block; white-space: nowrap; padding: 10px 14px; border-radius: 999px; text-decoration: none; font-weight: 500; font-size: 0.92rem; border: 0; background: transparent; cursor: pointer; min-height: 44px; }

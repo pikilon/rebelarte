@@ -3,7 +3,9 @@
 Migraciones SQL, semilla y pruebas. Contrato: `docs/arquitectura.md` §4 y `src/lib/types.ts`.
 
 ```
-migrations/   SQL numerado (01 catálogos … 13 realtime)
+migrations/   SQL numerado (01 catálogos … 14 advisors)
+templates/    plantillas de correo de Auth (magic_link, confirmation, email_change)
+config.toml   configuración de Auth para `supabase config push`
 seed.sql      catálogos (ramas, categorías, cargos, licencias); idempotente
 seed-demo.sql datos ficticios para desarrollo local (opcional)
 tests/        run.sh, stubs.sql, helpers.sql y *.test.sql
@@ -62,3 +64,18 @@ como root usa el usuario `postgres`), carga `tests/stubs.sql` (imita roles, `aut
 y `storage` de Supabase), aplica migraciones y seeds y ejecuta `tests/*.test.sql`
 (cada fichero en una transacción que se revierte). Sale con código distinto de 0
 si algo falla; `VERBOSE=1` muestra todas las aserciones.
+
+## Estado del proyecto remoto (12-11-2026)
+
+- Proyecto `jwuqsqwbkfggrycpburv` (eu-west-3), reseteado con `supabase db reset --linked` y las 14 migraciones + `seed.sql`.
+- **Plantillas de correo**: el plan gratuito de Supabase no permite plantillas propias con el SMTP por defecto
+  (`config push` falla con `entitlement_required`). Están comentadas en `config.toml`; descoméntalas y sube con
+  `npx supabase config push` cuando haya SMTP propio. **Hasta entonces el correo no lleva el código de 6 dígitos**
+  (solo el enlace mágico), y el SMTP por defecto tiene un límite muy bajo de envíos.
+- **Advisors**: la migración 14 corrige `search_path`, funciones de trigger expuestas, `auth.uid()` en políticas RLS,
+  políticas permisivas duplicadas e índices de claves foráneas. Quedan, por diseño: las vistas `profiles_public` y
+  `works_cards` (SECURITY DEFINER para exponer solo columnas públicas), las funciones `is_*` y las RPC públicas
+  ejecutables por `anon`/`authenticated` (las usan las políticas RLS y la app) y los índices «sin uso» (aún no hay tráfico).
+- Borrar un usuario de `auth.users` elimina en cascada perfil, obras y participaciones, pero **no** sus archivos de Storage
+  (Supabase prohíbe borrarlos por SQL): hay que eliminarlos con la API de Storage.
+- `test:db` necesita Postgres 16 local; sin él: `docker run --rm -v "$PWD":/repo -w /repo postgres:16 bash -c "apt-get update -qq && apt-get install -y -qq python3 && bash supabase/tests/run.sh"`.

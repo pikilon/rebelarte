@@ -2,7 +2,17 @@
 import { LIMITS } from '$lib/types';
 import type { ProcessedImage } from './image';
 
-export async function pdfThumb(file: Blob, maxSide: number = LIMITS.thumbMaxSide): Promise<ProcessedImage | null> {
+/** Tiempo máximo para generar la miniatura: un PDF sin miniatura sigue siendo válido. */
+const THUMB_TIMEOUT_MS = 15_000;
+
+export function pdfThumb(file: Blob, maxSide: number = LIMITS.thumbMaxSide): Promise<ProcessedImage | null> {
+  return Promise.race([
+    renderThumb(file, maxSide),
+    new Promise<null>((resolve) => setTimeout(() => resolve(null), THUMB_TIMEOUT_MS))
+  ]);
+}
+
+async function renderThumb(file: Blob, maxSide: number): Promise<ProcessedImage | null> {
   try {
     const pdfjs = await import('pdfjs-dist');
     const { default: workerUrl } = await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
