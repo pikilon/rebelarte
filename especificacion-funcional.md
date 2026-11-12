@@ -83,13 +83,14 @@ Cada campo del CV tiene visibilidad propia: público, solo usuarios registrados,
 
 ## 9. Moderación, denuncias y legal
 
-- Cola de moderación para contenido denunciado y para contenido marcado por reglas automáticas.
-- Procedimiento de retirada con notificación al autor, plazo de respuesta y posibilidad de contranotificación (DSA y LSSI).
-- Política de reincidencia: suspensión de cuentas que suben contenido infringido.
-- Condiciones de uso con garantía del autor sobre los derechos de lo que sube.
-- Derechos de imagen: consentimiento para fotos de personas y tratamiento específico para menores.
-- Registro de todas las actuaciones de moderación.
-- Revisión por abogado antes del lanzamiento.
+- **Régimen de intermediación y alojamiento**: Rebelarte actúa exclusivamente como prestador de servicios de intermediación/alojamiento de datos facilitados por los usuarios (art. 16 LSSI-CE 34/2002 y art. 6 Reglamento (UE) 2022/2065 DSA), exento de responsabilidad por contenidos ajenos y sin obligación general de supervisión previa ni de búsqueda activa de hechos ilícitos (art. 8 DSA). La responsabilidad recae íntegra y exclusivamente en los usuarios que suben los contenidos.
+- **Garantía del usuario e indemnidad**: Quien sube contenidos declara y garantiza ser el titular exclusivo de los derechos o contar con autorización expresa para todo lo que incorpora (obras, imágenes, textos, audios, enlaces de vídeo externos y datos de otros participantes). El usuario responde frente a terceros y asume la obligación de mantener indemne a Rebelarte y a la asociación titular frente a reclamaciones, sanciones o perjuicios.
+- **Participaciones**: Quien dé de alta una obra y registre a otros participantes garantiza la veracidad y el consentimiento de los afectados; el sistema contempla aceptación por defecto con derecho inalienable de rechazo o retirada posterior (total o parcial por cargos) por parte de los participantes.
+- **Procedimiento de notificación y retirada (Notice and Action)**: Conforme al art. 16 DSA y a la LSSI, articulado a través del botón «Denunciar» en la app y mediante comunicación a `[correo de contacto]`. Exige motivación, localización exacta (URL), datos del notificante y declaración de buena fe. Contempla acuse de recibo, plazos orientativos de evaluación (24-72 h hábiles), adopción de medidas cautelares de retirada provisional inmediata, notificación motivada al autor afectado, plazo orientativo para alegaciones o contranotificación (14 días naturales) y registro íntegro de actuaciones.
+- **Ausencia de garantías del servicio y no intermediación**: Servicio gratuito proporcionado «tal cual» sin garantías de disponibilidad permanente ni indemnización por pérdida accidental de datos (los usuarios deben conservar sus propias copias de seguridad). Sin responsabilidad por plataformas externas enlazadas o incrustadas (YouTube, Vimeo, SoundCloud, etc.) ni por los acuerdos, compras o encargos acordados entre usuarios mediante el canal de contacto interno (sin comisión, sin pasarela de pago y sin intervención mercantil de Rebelarte).
+- **Contenidos prohibidos y derechos de imagen**: Prohibición estricta de contenidos ilícitos, vulneración de propiedad intelectual, odio o discriminación, difamación, vulneración de intimidad o propia imagen (exige consentimiento) y protección reforzada con tolerancia cero ante contenidos de menores.
+- **Política de reincidencia**: Suspensión o revocación de cuentas por subida reiterada de contenidos infractores o por denuncias fraudulentas.
+- **Estado de los textos**: Aviso Legal, Condiciones de Uso y Política de Privacidad redactados en borrador provisional (con marcadores pendientes) a la espera de revisión obligatoria por asesoría legal antes del lanzamiento.
 
 ## 10. Decisiones provisionales
 
@@ -101,13 +102,14 @@ Adoptadas el 12-11-2026 como provisionales. Sustituyen a los **Decidir** de las 
 4. **Participantes sin cuenta**: sí. El subidor los lista con nombre y cargo, y reciben un código para reclamar la participación.
 5. **Varios subidores**: no en la primera versión.
 6. **Premios**: mixto (autodeclarado con sello «verificado» que pone la moderación). Los participantes aceptados de una obra premiada lo ven en su CV como premio de la obra.
-7. **Licencia por defecto**: CC BY-NC-ND 4.0, elegible por obra. Pendiente de revisión legal.
+7. **Licencia por defecto**: **Decidir** (abierta). Propuesta provisional de debate: CC BY-NC-ND 4.0 elegible por obra, pero la licencia por defecto se mantiene como punto abierto pendiente de decisión y de revisión legal.
 8. **Idiomas**: español e inglés. Sin traducción automática en la primera versión.
 9. **Contacto**: solo usuarios registrados, con límite de envíos por hora.
 10. **Comentarios, festivales y convocatorias**: fase posterior.
 
 ### Historial de cambios
 
+- v0.3 (12-11-2026): actualización de la sección legal (Aviso Legal, Condiciones de Uso y Política de Privacidad en es/en) incorporando régimen de alojamiento e intermediación (art. 16 LSSI / arts. 6 y 8 DSA), garantía e indemnidad del autor, participaciones con derecho de rechazo, procedimiento de notificación y retirada (art. 16 DSA) y ausencia de garantías del servicio. La licencia por defecto se mantiene como punto abierto («Decidir»).
 - v0.2 (12-11-2026): acceso sin contraseña; decisiones provisionales de la sección 10; enlace al diseño técnico.
 
 ## 11. Puntos que estaban abiertos (referencia)

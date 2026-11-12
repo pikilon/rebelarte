@@ -77,5 +77,7 @@ si algo falla; `VERBOSE=1` muestra todas las aserciones.
   `works_cards` (SECURITY DEFINER para exponer solo columnas públicas), las funciones `is_*` y las RPC públicas
   ejecutables por `anon`/`authenticated` (las usan las políticas RLS y la app) y los índices «sin uso» (aún no hay tráfico).
 - Borrar un usuario de `auth.users` elimina en cascada perfil, obras y participaciones, pero **no** sus archivos de Storage
-  (Supabase prohíbe borrarlos por SQL): hay que eliminarlos con la API de Storage.
+  (Supabase prohíbe borrarlos por SQL): hay que eliminarlos con la API de Storage o con
+  `npx supabase storage rm --experimental --remote ss:///<bucket>/<ruta>` (en la CLI v3 `--linked` está obsoleto; usa `--remote`).
+  Los 4 archivos huérfanos de las pruebas E2E se borraron el 12-11-2026; Storage quedó vacío.
 - `test:db` necesita Postgres 16 local; sin él: `docker run --rm -v "$PWD":/repo -w /repo postgres:16 bash -c "apt-get update -qq && apt-get install -y -qq python3 && bash supabase/tests/run.sh"`.

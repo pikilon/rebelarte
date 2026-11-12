@@ -12,6 +12,7 @@
   const path = $derived(page.url.pathname);
   const isWelcome = $derived(/\/mi\/bienvenida$/.test(path));
   let checking = false;
+  let loggingOut = false;
 
   async function ensureProfile() {
     if (checking) return;
@@ -28,7 +29,7 @@
   }
 
   $effect(() => {
-    if (!auth.ready) return;
+    if (!auth.ready || loggingOut) return;
     if (!auth.session) {
       void goto(url.login(lang, path + page.url.search), { replaceState: true });
       return;
@@ -55,8 +56,13 @@
   }
 
   async function logout() {
-    await auth.signOut();
-    await goto(url.home(lang));
+    loggingOut = true;
+    try {
+      await auth.signOut();
+      await goto(url.home(lang));
+    } finally {
+      loggingOut = false;
+    }
   }
 </script>
 

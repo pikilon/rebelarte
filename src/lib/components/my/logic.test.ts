@@ -38,7 +38,11 @@ describe('safeNext y códigos', () => {
   it('clasifica errores de auth', () => {
     expect(authErrorKey({ status: 429 })).toBe('my.login.err.limit');
     expect(authErrorKey({ code: 'over_email_send_rate_limit' })).toBe('my.login.err.limit');
+    expect(authErrorKey({ message: 'For security purposes, you can only request this once every 60 seconds.' })).toBe('my.login.err.limit');
     expect(authErrorKey({ code: 'otp_expired', message: 'Token has expired or is invalid' })).toBe('my.login.err.code');
+    expect(authErrorKey({ message: 'Email link is invalid or has expired' })).toBe('my.login.err.code');
+    expect(authErrorKey({ message: 'No code verifier detected' })).toBe('my.login.err.code');
+    expect(authErrorKey({ code: 'email_address_invalid' })).toBe('my.login.err.email');
     expect(authErrorKey(new Error('boom'))).toBe('my.login.err.generic');
   });
 });

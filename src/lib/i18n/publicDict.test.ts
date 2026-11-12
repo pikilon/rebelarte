@@ -19,9 +19,12 @@ describe('dict/public', () => {
     const counts = { aviso: 6, condiciones: 8, privacidad: 7 };
     for (const [p, n] of Object.entries(counts)) {
       expect(dict.es[`public.legal.${p}.title`]).toBeTruthy();
+      expect(dict.en[`public.legal.${p}.title`]).toBeTruthy();
       for (let i = 1; i <= n; i++) {
-        expect(dict.es[`public.legal.${p}.${i}.t`], `${p}.${i}`).toBeTruthy();
-        expect(dict.es[`public.legal.${p}.${i}.p`], `${p}.${i}`).toBeTruthy();
+        expect(dict.es[`public.legal.${p}.${i}.t`], `es.${p}.${i}`).toBeTruthy();
+        expect(dict.es[`public.legal.${p}.${i}.p`], `es.${p}.${i}`).toBeTruthy();
+        expect(dict.en[`public.legal.${p}.${i}.t`], `en.${p}.${i}`).toBeTruthy();
+        expect(dict.en[`public.legal.${p}.${i}.p`], `en.${p}.${i}`).toBeTruthy();
       }
     }
   });

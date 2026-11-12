@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:db": "bash supabase/tests/run.sh",
     "test:php": "php share/tests/run.php",
-    "build:construccion": "node scripts/build-construccion.mjs"
+    "build:construccion": "node scripts/build-construccion.mjs",
+    "build:hostinger": "npm run build && node scripts/build-hostinger.mjs"
   },
   "engines": {
     "node": ">=20"

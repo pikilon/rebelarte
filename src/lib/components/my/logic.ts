@@ -56,7 +56,7 @@ export function authErrorKey(e: unknown): 'my.login.err.limit' | 'my.login.err.c
   const code = err?.code ?? '';
   const msg = (err?.message ?? '').toLowerCase();
   if (err?.status === 429 || code.includes('rate_limit') || msg.includes('rate limit') || msg.includes('seconds')) return 'my.login.err.limit';
-  if (code === 'otp_expired' || msg.includes('expired') || msg.includes('invalid') || code === 'otp_disabled') return 'my.login.err.code';
+  if (code === 'otp_expired' || msg.includes('expired') || msg.includes('invalid') || code === 'otp_disabled' || msg.includes('verifier') || code.includes('verifier')) return 'my.login.err.code';
   if (code === 'email_address_invalid' || msg.includes('email address')) return 'my.login.err.email';
   return 'my.login.err.generic';
 }

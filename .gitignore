@@ -4,6 +4,7 @@ dist/
 .env.*
 .DS_Store
 build/
+build-hostinger/
 .svelte-kit/
 share/cache/
 share/config.php

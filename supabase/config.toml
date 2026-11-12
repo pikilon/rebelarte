@@ -162,7 +162,7 @@ site_url = "https://rebelarte.com"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://rebelarte.com/**", "http://localhost:5173/**"]
+additional_redirect_urls = ["https://rebelarte.com/**", "https://beta.rebelarte.com/**", "http://localhost:5173/**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -240,14 +240,19 @@ otp_length = 6
 otp_expiry = 3600
 
 # Use a production-ready SMTP server
+# Configurado para el servicio de correo de Hostinger (smtp.hostinger.com).
+# La contraseña NUNCA se escribe en el repositorio: se lee de la variable de entorno
+# SUPABASE_SMTP_PASS antes de ejecutar `supabase config push`, o se configura en
+# Supabase Dashboard -> Authentication -> SMTP Settings.
+# Descomenta este bloque y las plantillas inferiores cuando el buzón esté creado en Hostinger.
 # [auth.email.smtp]
 # enabled = true
-# host = "smtp.sendgrid.net"
-# port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+# host = "smtp.hostinger.com"
+# port = 465
+# user = "no-reply@rebelarte.com"
+# pass = "env(SUPABASE_SMTP_PASS)"
+# admin_email = "no-reply@rebelarte.com"
+# sender_name = "Rebelarte"
 
 # Plantillas de correo (sin contraseñas: enlace mágico + código de 6 dígitos).
 # Supabase solo permite plantillas propias con SMTP personalizado o plan de pago:

@@ -8,6 +8,7 @@
   import Button from '$lib/components/ui/Button.svelte';
   import Field from '$lib/components/ui/Field.svelte';
   import Notice from '$lib/components/ui/Notice.svelte';
+  import Spinner from '$lib/components/ui/Spinner.svelte';
   import { authErrorKey, isEmail, isOtpCode, safeNext } from '$lib/components/my/logic';
 
   const COOLDOWN = 60;
@@ -23,13 +24,21 @@
   let timer: ReturnType<typeof setInterval> | undefined;
   let codeInput: HTMLInputElement | undefined = $state();
   let emailInput: HTMLInputElement | undefined = $state();
-  let redirecting = false;
+  let redirecting = $state(false);
+
+  // Indica si la URL actual viene de una redirección de autenticación (código o token)
+  const hasAuthRedirect = $derived.by(() => {
+    return page.url.searchParams.has('code') || page.url.hash.includes('access_token=');
+  });
 
   // Error que Supabase devuelve en la URL cuando el enlace mágico caduca o ya se usó.
   const urlError = $derived.by(() => {
     const h = new URLSearchParams(page.url.hash.replace(/^#/, ''));
-    const c = page.url.searchParams.get('error_code') ?? h.get('error_code');
-    return c ? t(authErrorKey({ code: c })) : null;
+    const code = page.url.searchParams.get('error_code') ?? h.get('error_code');
+    const desc = page.url.searchParams.get('error_description') ?? h.get('error_description');
+    const err = page.url.searchParams.get('error') ?? h.get('error');
+    if (!code && !desc && !err) return null;
+    return t(authErrorKey({ code: code ?? err ?? undefined, message: desc ?? undefined }));
   });
 
   async function proceed() {
@@ -96,6 +105,7 @@
   }
 
   function onCodeInput() {
+    error = null;
     code = code.replace(/\D/g, '').slice(0, 6);
     if (code.length === 6) void verify();
   }
@@ -113,34 +123,39 @@
 
 <section class="container narrow">
   <div class="card stack">
-    {#if step === 'email'}
-      <h1>{t('my.login.title')}</h1>
-      <p class="muted">{t('my.login.lead')}</p>
-      {#if urlError}<Notice kind="error">{urlError}</Notice>{/if}
-      <form class="stack" onsubmit={send} novalidate>
-        <Field label={t('my.login.email')} id="login-email" error={error}>
-          <input id="login-email" type="email" name="email" autocomplete="email" inputmode="email" required bind:value={email} bind:this={emailInput} />
-        </Field>
-        <Button type="submit" loading={busy}>{t('my.login.send')}</Button>
-      </form>
-      <Notice>{t('my.login.noPassword')}</Notice>
+    {#if redirecting || (auth.ready && auth.session) || (hasAuthRedirect && !auth.ready)}
+      <Spinner />
     {:else}
-      <h1>{t('my.login.checkTitle')}</h1>
-      <p>{t('my.login.checkLead', { email })}</p>
-      <form class="stack" onsubmit={verify} novalidate>
-        <Field label={t('my.login.code')} id="login-code" hint={t('my.login.codeHint')} error={error}>
-          <input id="login-code" class="otp" type="text" name="code" inputmode="numeric" autocomplete="one-time-code"
-            pattern="[0-9]*" maxlength="6" placeholder="••••••" bind:value={code} bind:this={codeInput} oninput={onCodeInput} />
-        </Field>
-        <Button type="submit" loading={busy}>{t('my.login.verify')}</Button>
-      </form>
-      <div class="row">
-        <Button variant="secondary" size="sm" type="button" disabled={cooldown > 0 || busy} onclick={() => send()}>
-          {cooldown > 0 ? t('my.login.resendIn', { s: cooldown }) : t('my.login.resend')}
-        </Button>
-        <Button variant="ghost" size="sm" type="button" onclick={changeEmail}>{t('my.login.changeEmail')}</Button>
-      </div>
-      <p class="muted small" aria-live="polite">{t('my.login.spam')}</p>
+      {#if urlError}<Notice kind="error">{urlError}</Notice>{/if}
+      {#if step === 'email'}
+        <h1>{t('my.login.title')}</h1>
+        <p class="muted">{t('my.login.lead')}</p>
+        <form class="stack" onsubmit={send} novalidate>
+          <Field label={t('my.login.email')} id="login-email" error={error}>
+            <input id="login-email" type="email" name="email" autocomplete="email" inputmode="email" required bind:value={email} bind:this={emailInput} oninput={() => { error = null; }} />
+          </Field>
+          <Button type="submit" loading={busy}>{t('my.login.send')}</Button>
+        </form>
+        <Notice>{t('my.login.noPassword')}</Notice>
+      {:else}
+        <h1>{t('my.login.checkTitle')}</h1>
+        <p>{t('my.login.checkLead', { email })}</p>
+        <Notice>{t('my.login.orLink')}</Notice>
+        <form class="stack" onsubmit={verify} novalidate>
+          <Field label={t('my.login.code')} id="login-code" hint={t('my.login.codeHint')} error={error}>
+            <input id="login-code" class="otp" type="text" name="code" inputmode="numeric" autocomplete="one-time-code"
+              pattern="[0-9]*" maxlength="6" placeholder="••••••" bind:value={code} bind:this={codeInput} oninput={onCodeInput} />
+          </Field>
+          <Button type="submit" loading={busy}>{t('my.login.verify')}</Button>
+        </form>
+        <div class="row">
+          <Button variant="secondary" size="sm" type="button" disabled={cooldown > 0 || busy} onclick={() => send()}>
+            {cooldown > 0 ? t('my.login.resendIn', { s: cooldown }) : t('my.login.resend')}
+          </Button>
+          <Button variant="ghost" size="sm" type="button" onclick={changeEmail}>{t('my.login.changeEmail')}</Button>
+        </div>
+        <p class="muted small" aria-live="polite">{t('my.login.spam')}</p>
+      {/if}
     {/if}
   </div>
 </section>

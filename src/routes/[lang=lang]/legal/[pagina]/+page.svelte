@@ -1,5 +1,7 @@
 <script lang="ts">
-  // Textos legales provisionales. Estructura: claves public.legal.<pagina>.<n>.t / .p
+  // Borrador provisional pendiente de revisión legal previa al lanzamiento.
+  // Adecuación a LSSI-CE 34/2002 y Reglamento (UE) 2022/2065 de Servicios Digitales (DSA).
+  // Estructura: claves public.legal.<pagina>.<n>.t / .p
   import { page } from '$app/state';
   import { currentLang, t } from '$lib/i18n';
   import { url } from '$lib/routes';
@@ -10,9 +12,20 @@
   const PAGES = { aviso: 6, condiciones: 8, privacidad: 7 } as const;
   type Pagina = keyof typeof PAGES;
 
+  const ALIASES: Record<string, Pagina> = {
+    'aviso-legal': 'aviso',
+    'legal-notice': 'aviso',
+    terms: 'condiciones',
+    'terms-of-use': 'condiciones',
+    privacy: 'privacidad',
+    'privacy-policy': 'privacidad'
+  };
+
   const lang = $derived(currentLang());
   const slug = $derived(page.params.pagina ?? '');
-  const pagina = $derived<Pagina | null>(slug in PAGES ? (slug as Pagina) : null);
+  const pagina = $derived<Pagina | null>(
+    slug in PAGES ? (slug as Pagina) : (ALIASES[slug] ?? null)
+  );
   const sections = $derived(pagina ? Array.from({ length: PAGES[pagina] }, (_, i) => i + 1) : []);
 </script>
 
@@ -46,5 +59,5 @@
   .other a { text-decoration: none; padding: 4px 0; border-bottom: 2px solid transparent; }
   .other a[aria-current='page'] { border-color: var(--accent); font-weight: 600; }
   section h2 { font-size: 1.25rem; margin-bottom: var(--space-2); }
-  section p { margin: 0; }
+  section p { margin: 0; white-space: pre-line; line-height: 1.6; }
 </style>
