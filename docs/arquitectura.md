@@ -112,7 +112,7 @@ Esquema `public`. Todas las tablas con RLS activada. Los textos traducibles son 
 - RPC `moderate(target_type, target_id, action, note, report_id null)` (solo `moderator|admin`).
 
 ### Storage
-Buckets: `images` (público), `docs` (público: PDF y ZIP), `audio` (público), `avatars` (público). Rutas: `<user_id>/<work_id>/<uuid>.<ext>`; política: escribir solo en carpeta propia. Miniaturas en la misma carpeta con sufijo `-thumb.webp`. Las obras privadas usan rutas no adivinables (uuid); se acepta que el archivo sea accesible si se conoce la URL (documentado).
+Buckets: `images` (público), `docs` (público: PDF y ZIP), `audio` (público), `avatars` (público). Rutas: `<user_id>/<work_id>/<uuid>.<ext>`; política: escribir solo en carpeta propia. Miniaturas (de imagen y de PDF) siempre en el bucket `images`, ruta `<user_id>/<work_id>/<uuid>-thumb.webp`; `attachments.thumb_path` es ruta del bucket `images`. Las obras privadas usan rutas no adivinables (uuid); se acepta que el archivo sea accesible si se conoce la URL (documentado).
 
 ### Identificadores cortos
 `short_id` de 8 caracteres base62 generado por función `gen_short_id()` con reintento ante colisión. Lo usan URLs de obra y QR.

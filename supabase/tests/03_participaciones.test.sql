@@ -41,7 +41,7 @@ select public.set_participation_role_status(id, 'rejected') from public.particip
 select t.eq((select status from public.participations where id = (select id from ids where k='bob')), 'rejected', 'todos los cargos rechazados => rejected');
 select t.eq(t.n($$select 1 from public.cv_works(t.bob())$$), 0::bigint, 'ya no sale en el CV');
 select t.login(t.bob());
-select t.eq(t.n($$select 1 from public.notifications where type='participation_rejected'$$), 2::bigint, 'aviso de rechazo total');
+select t.eq(t.n($$select 1 from public.notifications where type='participation_rejected'$$), 3::bigint, 'aviso de rechazo total (más los parciales)');
 select t.fails($$select public.request_participation((select id from w where k='pub'), '[{"role_text":"x"}]')$$, 'participation_rejected', 'rechazado no puede volver a pedir');
 
 -- carol: retirada por el participante y reactivación
@@ -67,7 +67,7 @@ select t.login(t.bob());
 select t.fails($$select public.invite_participant((select id from w where k='pub'), 'dave', '[{"role_text":"x"}]')$$, 'forbidden', 'solo el subidor invita');
 select t.fails($$select public.add_guest_participant((select id from w where k='pub'), 'Invitada', '[{"role_text":"x"}]')$$, 'forbidden', 'solo el subidor añade invitados');
 select t.login(t.alice());
-select public.add_guest_participant((select id from w where k='pub'), 'Persona Sin Cuenta', '[{"role_id": ' || :modelo || '}]'::jsonb) as code \gset
+select public.add_guest_participant((select id from w where k='pub'), 'Persona Sin Cuenta', ('[{"role_id": ' || :modelo || '}]')::jsonb) as code \gset
 select t.ok(length(:'code') = 12, 'código de 12 caracteres');
 select t.eq(t.n($$select 1 from public.participation_claims$$), 1::bigint, 'el subidor ve el código');
 select t.ok((select claim_code = :'code' from public.participations_manage where guest_name = 'Persona Sin Cuenta'), 'participations_manage trae claim_code al subidor');
@@ -79,9 +79,11 @@ select t.eq(t.n($$select 1 from public.participations where guest_name = 'Person
 select t.login(t.carol());
 select t.fails($$select public.claim_participation('XXXXXXXXXXXX')$$, 'invalid_code', 'código inválido');
 select t.login(t.dave());
+select t.fails(format('select public.claim_participation(%L)', :'code'), 'already_participating', 'quien ya participa no puede reclamar otra');
+select t.login(t.mod());
 select public.claim_participation(lower(:'code')) is not null as ok \gset
 select t.ok(:'ok', 'reclamar con código (sin distinguir mayúsculas)');
-select t.ok((select profile_id = t.dave() and guest_name is null from public.participations where id = (select id from public.participations where profile_id = t.dave() and work_id = (select id from w where k='pub') limit 1)), 'queda enlazada');
+select t.ok((select profile_id = t.mod() and guest_name is null from public.participations where id = (select id from public.participations where profile_id = t.mod() and work_id = (select id from w where k='pub') limit 1)), 'queda enlazada');
 select t.login(t.carol());
 select t.fails($$select public.claim_participation('x')$$, 'invalid_code', 'el código es de un solo uso');
 

@@ -81,7 +81,7 @@
       <h2 id="mb-pdf" class="h">{t('public.media.pdf')}</h2>
       <ul class="docs">
         {#each pdfs as a, i (a.id)}
-          {@const thumb = publicUrl('docs', a.thumb_path)}
+          {@const thumb = publicUrl('images', a.thumb_path)}
           <li>
             <a class="doc" href={publicUrl('docs', a.path) ?? '#'} target="_blank" rel="noopener noreferrer">
               {#if thumb}<img src={thumb} alt="" loading="lazy" />{:else}<span class="ph" aria-hidden="true">PDF</span>{/if}
