@@ -4,6 +4,7 @@
   import { currentLang, t, LANGS } from '$lib/i18n';
   import { switchLang, url } from '$lib/routes';
   import Avatar from '$lib/components/ui/Avatar.svelte';
+  import UnreadBadge from '$lib/components/contact/UnreadBadge.svelte';
 
   let { children } = $props();
   const lang = $derived(currentLang());
@@ -30,7 +31,7 @@
     <nav class="nav" aria-label="Principal">
       {#if auth.session}
         {#if auth.isModerator}<a href={url.moderation(lang)}>{t('nav.moderation')}</a>{/if}
-        <a href={url.my(lang, 'mensajes')}>{t('nav.messages')}</a>
+        <a href={url.my(lang, 'mensajes')}>{t('nav.messages')} <UnreadBadge /></a>
         <a class="me" href={url.my(lang)}>
           <Avatar path={auth.profile?.avatar_path} name={auth.profile?.display_name ?? '?'} size={30} />
           <span class="sr-only">{t('nav.my')}</span>

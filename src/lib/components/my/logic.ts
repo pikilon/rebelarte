@@ -303,3 +303,16 @@ export function saveActions(status: WorkStatus | null): SaveAction[] {
 }
 
 export const WORK_STATUS_FILTERS: readonly (WorkStatus | 'all')[] = ['all', 'draft', 'review', 'published', 'hidden'];
+
+// ---------- Errores de base de datos ----------
+export type DbErrorKey = 'my.err.duplicate' | 'my.err.forbidden' | 'my.err.notfound' | 'my.err.generic';
+
+export function dbErrorKey(e: unknown): DbErrorKey {
+  const err = e as { code?: string; message?: string } | null;
+  const code = err?.code ?? '';
+  const msg = (err?.message ?? '').toLowerCase();
+  if (code === '23505' || msg.includes('duplicate')) return 'my.err.duplicate';
+  if (code === '42501' || msg.includes('row-level security') || msg.includes('not allowed') || msg.includes('permission')) return 'my.err.forbidden';
+  if (code === 'PGRST116' || msg.includes('not found')) return 'my.err.notfound';
+  return 'my.err.generic';
+}

@@ -28,8 +28,11 @@ export const url = {
     return `/${l}/buscar${qs ? `?${qs}` : ''}`;
   },
   branch: (l: Lang, b: BranchId) => `/${l}/rama/${b}`,
-  work: (l: Lang, shortId: string, title?: string) =>
-    `/${l}/obra/${shortId}${title && slugify(title) ? `/${slugify(title)}` : ''}`,
+  work: (l: Lang, shortId: string, title?: string) => {
+    const slug = title ? slugify(title) : '';
+    // «participantes» es una ruta fija (/obra/<id>/participantes): no puede usarse como slug.
+    return `/${l}/obra/${shortId}${slug && slug !== 'participantes' ? `/${slug}` : ''}`;
+  },
   workParticipants: (l: Lang, shortId: string) => `/${l}/obra/${shortId}/participantes`,
   cv: (l: Lang, alias: string) => `/${l}/${alias}`,
   gallery: (l: Lang, alias: string) => `/${l}/${alias}?vista=galeria`,
