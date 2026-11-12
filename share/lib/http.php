@@ -8,9 +8,12 @@ function reb_supabase(array $cfg, string $method, string $endpoint, ?array $body
     $timeout = (float)($cfg['HTTP_TIMEOUT'] ?? 2);
     $headers = [
         'apikey: ' . $cfg['SUPABASE_ANON_KEY'],
-        'Authorization: Bearer ' . $cfg['SUPABASE_ANON_KEY'],
         'Accept: application/json',
     ];
+    // Las claves nuevas (sb_publishable_…) van solo en apikey; las anon antiguas (JWT) también como Bearer.
+    if (str_starts_with($cfg['SUPABASE_ANON_KEY'], 'eyJ')) {
+        $headers[] = 'Authorization: Bearer ' . $cfg['SUPABASE_ANON_KEY'];
+    }
     $payload = null;
     if ($body !== null) {
         $headers[] = 'Content-Type: application/json';

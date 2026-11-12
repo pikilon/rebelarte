@@ -59,7 +59,9 @@ file_put_contents("$tmp/fake.php", <<<'PHP'
 $uri = $_SERVER['REQUEST_URI'];
 file_put_contents(getenv('FAKE_LOG'), $uri . "\n", FILE_APPEND | LOCK_EX);
 $auth = $_SERVER['HTTP_APIKEY'] ?? '';
-if ($auth !== 'anon-test' || ($_SERVER['HTTP_AUTHORIZATION'] ?? '') !== 'Bearer anon-test') { http_response_code(401); echo '{}'; return; }
+// Como Supabase: apikey obligatoria; Authorization opcional (solo con claves JWT antiguas).
+$bearer = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+if ($auth !== 'anon-test' || ($bearer !== '' && $bearer !== 'Bearer anon-test')) { http_response_code(401); echo '{}'; return; }
 header('Content-Type: application/json');
 $q = parse_url($uri, PHP_URL_QUERY) ?? ''; parse_str($q, $p);
 $path = parse_url($uri, PHP_URL_PATH);
