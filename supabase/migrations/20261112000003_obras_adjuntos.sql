@@ -65,14 +65,15 @@ end $$;
 create trigger works_search before insert or update of title, description, keywords on public.works
   for each row execute function public.tg_works_search();
 
--- Guarda de obras (security definer: lee categorías y adjuntos sin RLS).
+-- Guarda de obras. Es security INVOKER a propósito: is_client() mira current_user,
+-- que dentro de una función security definer sería el propietario.
 --  * uploader_id, created_at y published_at no los controla el cliente.
 --  * 'hidden' es solo de moderación: el subidor no puede ponerlo ni salir de él.
 --  * 'deleted' es de un solo sentido para el cliente (si no, deshacería un
 --    borrado de moderación).
 --  * La categoría debe ser de la misma rama; la portada, una imagen de la obra.
 create or replace function public.tg_works_guard()
-returns trigger language plpgsql security definer set search_path = public as $$
+returns trigger language plpgsql set search_path = public as $$
 begin
   if tg_op = 'INSERT' then
     if public.is_client() and new.status in ('hidden', 'deleted') then

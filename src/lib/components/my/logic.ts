@@ -305,12 +305,34 @@ export function saveActions(status: WorkStatus | null): SaveAction[] {
 export const WORK_STATUS_FILTERS: readonly (WorkStatus | 'all')[] = ['all', 'draft', 'review', 'published', 'hidden'];
 
 // ---------- Errores de base de datos ----------
-export type DbErrorKey = 'my.err.duplicate' | 'my.err.forbidden' | 'my.err.notfound' | 'my.err.generic';
+// Las RPC lanzan códigos en minúsculas como mensaje (`raise exception 'already_participating'`).
+export type DbErrorKey =
+  | 'my.err.duplicate' | 'my.err.forbidden' | 'my.err.notfound' | 'my.err.generic' | 'my.err.already'
+  | 'my.err.noAuthor' | 'my.err.code' | 'my.err.rejectedBefore' | 'my.err.own' | 'my.err.transition' | 'my.err.roles';
+
+const DB_MESSAGES: Record<string, DbErrorKey> = {
+  alias_taken: 'my.err.duplicate',
+  already_participating: 'my.err.already',
+  work_not_found: 'my.err.notfound',
+  participation_not_found: 'my.err.notfound',
+  role_not_found: 'my.err.notfound',
+  profile_not_found: 'my.err.noAuthor',
+  invalid_code: 'my.err.code',
+  participation_rejected: 'my.err.rejectedBefore',
+  own_participation: 'my.err.own',
+  invalid_transition: 'my.err.transition',
+  roles_required: 'my.err.roles',
+  too_many_roles: 'my.err.roles',
+  invalid_role: 'my.err.roles',
+  forbidden: 'my.err.forbidden',
+  account_suspended: 'my.err.forbidden'
+};
 
 export function dbErrorKey(e: unknown): DbErrorKey {
   const err = e as { code?: string; message?: string } | null;
   const code = err?.code ?? '';
-  const msg = (err?.message ?? '').toLowerCase();
+  const msg = (err?.message ?? '').trim().toLowerCase();
+  if (msg in DB_MESSAGES) return DB_MESSAGES[msg];
   if (code === '23505' || msg.includes('duplicate')) return 'my.err.duplicate';
   if (code === '42501' || msg.includes('row-level security') || msg.includes('not allowed') || msg.includes('permission')) return 'my.err.forbidden';
   if (code === 'PGRST116' || msg.includes('not found')) return 'my.err.notfound';

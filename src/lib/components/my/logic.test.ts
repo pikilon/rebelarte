@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  aliasProblem, authErrorKey, BRANCH_FIELDS, draftToRow, emptyWorkDraft, formatDuration, isOtpCode, moveItem,
+  dbErrorKey, aliasProblem, authErrorKey, BRANCH_FIELDS, draftToRow, emptyWorkDraft, formatDuration, isOtpCode, moveItem,
   normalizeKeywords, parseDuration, parseWorkRef, rolesForBranch, rolesToInput, safeNext, saveActions, statusPatch,
   suggestAlias, validateDraft
 } from './logic';
@@ -157,5 +157,17 @@ describe('estado al guardar', () => {
     expect(saveActions(null)).toEqual(['draft', 'publish']);
     expect(saveActions('published')).toEqual(['keep', 'draft']);
     expect(saveActions('hidden')).toEqual(['keep']);
+  });
+});
+
+describe('errores de base de datos', () => {
+  it('traduce los códigos de las RPC', () => {
+    expect(dbErrorKey({ message: 'already_participating', code: 'P0001' })).toBe('my.err.already');
+    expect(dbErrorKey({ message: 'invalid_code', code: 'P0002' })).toBe('my.err.code');
+    expect(dbErrorKey({ message: 'alias_taken', code: '23505' })).toBe('my.err.duplicate');
+    expect(dbErrorKey({ message: 'forbidden', code: '42501' })).toBe('my.err.forbidden');
+    expect(dbErrorKey({ message: 'new row violates row-level security policy' })).toBe('my.err.forbidden');
+    expect(dbErrorKey({ message: 'algo raro' })).toBe('my.err.generic');
+    expect(dbErrorKey(null)).toBe('my.err.generic');
   });
 });

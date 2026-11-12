@@ -24,21 +24,21 @@
   import QrCode from '$lib/components/public/QrCode.svelte';
 
   type LoadState = { kind: 'loading' } | { kind: 'missing' } | { kind: 'error' } | { kind: 'ready'; data: WorkPageData };
-  let state = $state<LoadState>({ kind: 'loading' });
+  let view = $state<LoadState>({ kind: 'loading' });
 
   const lang = $derived(currentLang());
 
   $effect(() => {
     const id = page.params.id ?? '';
     let live = true;
-    untrack(() => { state = { kind: 'loading' }; });
+    untrack(() => { view = { kind: 'loading' }; });
     getWorkPage(id)
-      .then((data) => { if (live) state = data ? { kind: 'ready', data } : { kind: 'missing' }; })
-      .catch(() => { if (live) state = { kind: 'error' }; });
+      .then((data) => { if (live) view = data ? { kind: 'ready', data } : { kind: 'missing' }; })
+      .catch(() => { if (live) view = { kind: 'error' }; });
     return () => { live = false; };
   });
 
-  const data = $derived(state.kind === 'ready' ? state.data : null);
+  const data = $derived(view.kind === 'ready' ? view.data : null);
   const work = $derived(data?.work ?? null);
   const title = $derived(work ? tr(work.title, work.lang) || t('public.work.untitled') : '');
   const category = $derived(data && work?.category_id != null ? data.catalogs.categories.find((c) => c.id === work.category_id) ?? null : null);
@@ -81,13 +81,13 @@
   });
 </script>
 
-{#if state.kind === 'loading'}
+{#if view.kind === 'loading'}
   <Meta title={t('common.loading')} />
   <div class="container pad"><Spinner /></div>
-{:else if state.kind === 'error'}
+{:else if view.kind === 'error'}
   <Meta title={t('public.error.title')} />
   <div class="container pad"><Notice kind="error">{t('public.error.load')}</Notice></div>
-{:else if state.kind === 'missing' || !data || !work}
+{:else if view.kind === 'missing' || !data || !work}
   <NotFound title={t('public.work.notFoundTitle')} text={t('public.work.notFoundText')} />
 {:else}
   <Meta title={title} description={metaDesc} />
@@ -110,7 +110,7 @@
         {/if}
       </div>
       {#if isMine && (work.status !== 'published' || work.visibility !== 'public')}
-        <Notice kind="warn">{t(`public.work.state.${work.status !== 'published' ? work.status : work.visibility}`)}</Notice>
+        <Notice kind="warn">{t(`public.work.view.${work.status !== 'published' ? work.status : work.visibility}`)}</Notice>
       {/if}
     </header>
 

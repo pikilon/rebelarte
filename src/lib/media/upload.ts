@@ -6,7 +6,7 @@ import { LIMITS } from '$lib/types';
 import { makeThumb, processImage, ImageError } from './image';
 import { pdfThumb } from './pdf';
 import {
-  attachmentPath, avatarPath, bucketFor, storedExt, thumbPath, validateFile, withinStoredLimit,
+  attachmentPath, audioMime, avatarPath, bucketFor, storedExt, thumbPath, validateFile, withinStoredLimit,
   type Bucket, type FileProblem
 } from './rules';
 
@@ -98,7 +98,7 @@ export async function uploadAttachment(
   const bucket = bucketFor(kind);
   const path = attachmentPath(userId, workId, id, storedExt(kind, file));
   const tPath = thumb ? thumbPath(userId, workId, id) : null;
-  const mime = kind === 'image' ? 'image/webp' : kind === 'pdf' ? 'application/pdf' : kind === 'zip' ? 'application/zip' : file.type || 'audio/mpeg';
+  const mime = kind === 'image' ? 'image/webp' : kind === 'pdf' ? 'application/pdf' : kind === 'zip' ? 'application/zip' : audioMime(file) ?? 'audio/mpeg';
   const uploaded: Array<{ bucket: Bucket; path: string }> = [];
 
   try {

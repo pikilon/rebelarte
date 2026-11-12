@@ -9,7 +9,7 @@ export const DEFAULT_LANG: Lang = 'es';
 
 // Diccionarios por área: cada archivo de ./dict exporta { es: {...}, en: {...} }.
 // Un archivo por área evita conflictos entre quienes trabajan en paralelo.
-const areas = import.meta.glob<{ default: Record<Lang, Record<string, string>> }>('./dict/*.ts', { eager: true });
+const areas = import.meta.glob<{ default: Record<Lang, Record<string, string>> }>(['./dict/*.ts', '!./dict/*.test.ts'], { eager: true });
 const dicts: Record<Lang, Record<string, string>> = { es: { ...es }, en: { ...en } };
 for (const mod of Object.values(areas)) {
   Object.assign(dicts.es, mod.default.es);

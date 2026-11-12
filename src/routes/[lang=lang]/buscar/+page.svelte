@@ -119,7 +119,7 @@
 </div>
 
 <style>
-  .wrap { padding-top: var(--space-6); display: grid; gap: var(--space-5); }
+  .wrap { padding-top: var(--space-6); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
   .wrap > h1 { margin: 0; overflow-wrap: anywhere; font-size: clamp(1.7rem, 4.5vw, 2.6rem); }
   .sf { display: flex; gap: var(--space-2); max-width: 560px; }
   .sf input { flex: 1; min-width: 0; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--fg); background: var(--surface); min-height: 44px; }

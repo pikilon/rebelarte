@@ -66,7 +66,7 @@
 {/if}
 
 <style>
-  .wrap { padding-top: var(--space-6); display: grid; gap: var(--space-5); }
+  .wrap { padding-top: var(--space-6); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
   header { border-left: 6px solid var(--c); padding-left: var(--space-4); }
   .eyebrow { color: var(--c); }
   h1 { margin-bottom: var(--space-2); }

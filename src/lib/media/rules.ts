@@ -20,8 +20,24 @@ export function kindFromFile(file: { type: string; name: string }): AttachmentKi
   if (!type && ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif', 'bmp'].includes(e)) return 'image';
   if (type === 'application/pdf' || (!type && e === 'pdf')) return 'pdf';
   if (ZIP_MIMES.includes(type) || ((!type || type === 'application/octet-stream') && e === 'zip')) return 'zip';
-  if (type.startsWith('audio/') || (!type && ['mp3', 'wav', 'ogg', 'flac', 'm4a', 'aac', 'opus'].includes(e))) return 'audio';
+  if (audioMime(file)) return 'audio';
   return null;
+}
+
+/** MIME de audio que acepta el bucket `audio`, normalizando alias habituales. null = no admitido. */
+const AUDIO_MIMES: Record<string, string> = {
+  'audio/mpeg': 'audio/mpeg', 'audio/mp3': 'audio/mpeg', 'audio/mp4': 'audio/mp4', 'audio/x-m4a': 'audio/x-m4a',
+  'audio/m4a': 'audio/x-m4a', 'audio/aac': 'audio/aac', 'audio/ogg': 'audio/ogg', 'audio/wav': 'audio/wav',
+  'audio/x-wav': 'audio/x-wav', 'audio/wave': 'audio/wav', 'audio/webm': 'audio/webm', 'audio/flac': 'audio/flac',
+  'audio/x-flac': 'audio/flac'
+};
+const AUDIO_EXT: Record<string, string> = {
+  mp3: 'audio/mpeg', m4a: 'audio/x-m4a', aac: 'audio/aac', ogg: 'audio/ogg', wav: 'audio/wav', flac: 'audio/flac', webm: 'audio/webm'
+};
+export function audioMime(file: { type: string; name: string }): string | null {
+  const type = (file.type || '').toLowerCase();
+  if (type) return AUDIO_MIMES[type] ?? null;
+  return AUDIO_EXT[ext(file.name)] ?? null;
 }
 
 export function bucketFor(kind: AttachmentKind): Bucket {

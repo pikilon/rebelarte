@@ -60,10 +60,8 @@ returns trigger language plpgsql security definer set search_path = public as $$
 declare
   ok boolean;
 begin
-  -- el cliente no fija el estado
-  if public.is_client() then
-    new.status := 'open'; new.resolved_by := null; new.resolved_at := null;
-  end if;
+  -- (el estado inicial lo fuerza la política reports_insert; este trigger es
+  -- security definer, así que no puede distinguir al cliente con is_client())
   -- el objetivo existe
   ok := case new.target_type
     when 'work'       then exists (select 1 from public.works       where id = new.target_id)

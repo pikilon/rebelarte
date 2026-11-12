@@ -40,7 +40,7 @@
 {/if}
 
 <style>
-  .wrap { padding-top: var(--space-6); display: grid; gap: var(--space-4); max-width: 760px; }
+  .wrap { padding-top: var(--space-6); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); max-width: 760px; }
   .wrap > h1 { margin: 0; }
   .other { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); font-size: 0.95rem; }
   .other a { text-decoration: none; padding: 4px 0; border-bottom: 2px solid transparent; }

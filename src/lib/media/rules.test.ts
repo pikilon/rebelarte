@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { LIMITS } from '$lib/types';
 import {
   attachmentPath, avatarPath, bucketFor, kindFromFile, maxInputBytes, slotsLeft, storedExt, thumbPath, validateFile,
-  withinStoredLimit, isOwnPath, formatBytes
+  withinStoredLimit, isOwnPath, formatBytes, audioMime
 } from './rules';
 import { cropRegion, fitSize } from './image';
 
@@ -21,6 +21,12 @@ describe('tipo y bucket', () => {
     expect(kindFromFile(f('a.svg', 'image/svg+xml'))).toBeNull();
     expect(kindFromFile(f('a.exe', 'application/x-msdownload'))).toBeNull();
     expect(kindFromFile(f('a.mp4', 'video/mp4'))).toBeNull();
+    expect(kindFromFile(f('a.opus', 'audio/opus'))).toBeNull(); // el bucket no lo admite
+  });
+  it('normaliza el MIME de audio', () => {
+    expect(audioMime(f('a.mp3', 'audio/mp3'))).toBe('audio/mpeg');
+    expect(audioMime(f('a.wav', ''))).toBe('audio/wav');
+    expect(audioMime(f('a.xyz', ''))).toBeNull();
   });
   it('elige bucket', () => {
     expect(bucketFor('image')).toBe('images');

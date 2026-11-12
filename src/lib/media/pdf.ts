@@ -7,7 +7,8 @@ export async function pdfThumb(file: Blob, maxSide: number = LIMITS.thumbMaxSide
     const pdfjs = await import('pdfjs-dist');
     const { default: workerUrl } = await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
     pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
-    const doc = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    const task = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
+    const doc = await task.promise;
     try {
       const page = await doc.getPage(1);
       const base = page.getViewport({ scale: 1 });
@@ -22,7 +23,7 @@ export async function pdfThumb(file: Blob, maxSide: number = LIMITS.thumbMaxSide
       const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, 'image/webp', 0.86));
       return blob ? { blob, width: canvas.width, height: canvas.height } : null;
     } finally {
-      await doc.destroy();
+      await task.destroy();
     }
   } catch {
     // Un PDF sin miniatura sigue siendo válido.

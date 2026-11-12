@@ -85,7 +85,7 @@
       <div class="view" style:width="{VIEW}px" style:height="{VIEW}px" role="img" aria-label={t('my.avatar.preview')}>
         <img
           src={objectUrl} alt="" draggable="false"
-          onload={(e) => (natural = { w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })}
+          onload={(e) => { const im = e.currentTarget as HTMLImageElement; natural = { w: im.naturalWidth, h: im.naturalHeight }; }}
           style:left="{geo?.left ?? 0}px" style:top="{geo?.top ?? 0}px" style:width="{geo?.width ?? VIEW}px"
         />
       </div>
