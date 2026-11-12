@@ -71,16 +71,18 @@ Contienen datos personales, administrativos o financieros. Pueden consultarse so
 5. **Git y GitHub**: no crees el repositorio remoto ni hagas push hasta que el usuario lo confirme (cuenta, nombre y visibilidad).
 6. **Decisiones abiertas**: no tomes decisiones marcadas como "Decidir" en la especificación. Propón una opción y pregunta.
 7. **Cambios en la especificación**: si un cambio altera la especificación, actualiza `especificacion-funcional.md` en el mismo cambio y anótalo.
+8. **Svelte 5 (runas)**: usa exclusivamente la sintaxis de Svelte 5 (`$props()`, `$state()`, `$derived()`, `$effect()`, atributos de evento `onclick`, `{@render children?.()}`). No mezcles sintaxis de Svelte 4 (`export let`, `$:`, `on:click`, `<slot>`). Ejecuta siempre `npm run check` antes de dar una tarea por terminada.
 
 ## Estado actual
 
-- Especificación funcional v0.2, con decisiones provisionales en la sección 10.
-- Tecnología decidida: SPA SvelteKit + Supabase (acceso sin contraseña) + capa PHP en Hostinger para vistas previas y QR. Ver [docs/arquitectura.md](docs/arquitectura.md).
-- Primera versión de la aplicación implementada y probada sin Supabase real. Pendiente: crear el proyecto Supabase, configurar el correo OTP y desplegar en Hostinger.
+- Especificación funcional v0.3, con decisiones provisionales en la sección 10 y borrador de textos legales (alojamiento LSSI/DSA y notificación/retirada).
+- Tecnología decidida: SPA SvelteKit + Supabase (acceso sin contraseña) + capa PHP en Hostinger para vistas previas y QR. Ver [docs/arquitectura.md](docs/arquitectura.md) y [docs/despliegue-hostinger.md](docs/despliegue-hostinger.md).
+- Proyecto Supabase (`jwuqsqwbkfggrycpburv`, `eu-west-3`) creado y reseteado con las 14 migraciones y `seed.sql`.
+- Publicado en pruebas en **`https://beta.rebelarte.com`** (Hostinger, PHP 8.3 + SSL activo). Pendiente: activar el buzón SMTP de Hostinger y subir las plantillas de correo OTP con `npx supabase config push`.
 - Textos de interfaz: un archivo por área en `src/lib/i18n/dict/`. No pongas pruebas dentro de esa carpeta.
-- Pendiente: definir la licencia por defecto, los términos de uso y el procedimiento de retirada, con revisión legal antes del lanzamiento.
+- Pendiente: definir la licencia por defecto, rellenar los datos de la asociación en los textos legales y hacer revisión legal antes del lanzamiento.
 - Repositorio: `pikilon/rebelarte` en GitHub, público. Se hace push con la cuenta `pikilon`.
-- Publicado: página «en construcción» (`site/`) en GitHub Pages con el dominio `rebelarte.com`. El CI (`.github/workflows/deploy.yml`) ejecuta `npm run build` y publica `dist/`. El DNS se gestiona en Piensa Solutions.
+- Dominio principal: página «en construcción» (`site/`) en GitHub Pages con `rebelarte.com` (`.github/workflows/deploy.yml` ejecuta `npm run build:construccion`). El DNS se gestiona en Piensa Solutions y tiene un wildcard `*` A apuntando a Hostinger para subdominios.
 
 ## Glosario rápido
 
