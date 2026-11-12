@@ -28,9 +28,10 @@ create policy "rebelarte_storage_insert_own" on storage.objects for insert to au
               and (storage.foldername(name))[1] = auth.uid()::text
               and public.is_active_user());
 
+-- Moderación también puede localizar archivos (necesario para poder borrarlos).
 create policy "rebelarte_storage_select_own" on storage.objects for select to authenticated
   using (bucket_id in ('images', 'docs', 'audio', 'avatars')
-         and (storage.foldername(name))[1] = auth.uid()::text);
+         and ((storage.foldername(name))[1] = auth.uid()::text or public.is_moderator()));
 
 create policy "rebelarte_storage_update_own" on storage.objects for update to authenticated
   using (bucket_id in ('images', 'docs', 'audio', 'avatars')
