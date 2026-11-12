@@ -208,7 +208,11 @@ export async function listWorkParticipations(workId: string): Promise<Participat
   const rows = unwrap(
     await supabase.from('participations').select('*, participation_roles(*)').eq('work_id', workId).order('created_at')
   ) as unknown as Array<Participation & { participation_roles: ParticipationRole[] }>;
-  return withPeople(rows);
+  const views = await withPeople(rows);
+  // El código de reclamación solo lo ve el subidor, a través de la vista participations_manage.
+  const { data: codes } = await supabase.from('participations_manage').select('id, claim_code').eq('work_id', workId);
+  const byId = new Map(((codes ?? []) as Array<{ id: string; claim_code: string | null }>).map((c) => [c.id, c.claim_code]));
+  return views.map((v) => ({ ...v, claim_code: byId.get(v.id) ?? null }));
 }
 
 export type WorkRef = Pick<Work, 'id' | 'short_id' | 'title' | 'lang' | 'branch' | 'uploader_id' | 'status'>;
@@ -290,9 +294,19 @@ export async function setRoleStatus(roleId: string, status: 'accepted' | 'reject
   if (error) throw error;
 }
 
-export async function claimParticipation(code: string): Promise<void> {
-  const { error } = await supabase.rpc('claim_participation', { p_code: code.trim() });
+/** Devuelve el id de la participación reclamada. */
+export async function claimParticipation(code: string): Promise<string> {
+  const { data, error } = await supabase.rpc('claim_participation', { p_code: code.trim() });
   if (error) throw error;
+  return data as string;
+}
+
+/** Obra de una participación propia (para enlazarla tras reclamar). */
+export async function getParticipationWork(participationId: string): Promise<WorkRef | null> {
+  const { data } = await supabase.from('participations').select('work_id').eq('id', participationId).maybeSingle();
+  const wid = (data as { work_id: string } | null)?.work_id;
+  if (!wid) return null;
+  return (await workRefs([wid])).get(wid) ?? null;
 }
 
 export async function unreadMessages(userId: string): Promise<number | null> {

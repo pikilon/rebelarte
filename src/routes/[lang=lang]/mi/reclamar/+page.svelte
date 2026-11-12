@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { auth } from '$lib/auth.svelte';
-  import { currentLang, t, tr } from '$lib/i18n';
+    import { currentLang, t, tr } from '$lib/i18n';
   import { url } from '$lib/routes';
   import Button from '$lib/components/ui/Button.svelte';
   import Field from '$lib/components/ui/Field.svelte';
   import Notice from '$lib/components/ui/Notice.svelte';
-  import { claimParticipation, listMyParticipations, type MyParticipation } from '$lib/api/my';
+  import { claimParticipation, getParticipationWork, type WorkRef } from '$lib/api/my';
   import { dbErrorKey } from '$lib/components/my/logic';
 
   const lang = $derived(currentLang());
@@ -13,7 +12,7 @@
   let busy = $state(false);
   let error = $state<string | null>(null);
   let done = $state(false);
-  let claimed = $state<MyParticipation | null>(null);
+  let claimed = $state<WorkRef | null>(null);
 
   async function submit(e: SubmitEvent) {
     e.preventDefault();
@@ -22,15 +21,12 @@
     if (!c) return void (error = t('my.claim.errEmpty'));
     busy = true;
     try {
-      await claimParticipation(c);
+      const pid = await claimParticipation(c);
       done = true;
       code = '';
-      // La RPC no devuelve la obra: se toma la participación reclamada más reciente.
-      const list = await listMyParticipations(auth.userId ?? '');
-      claimed = [...list].sort((a, b) => b.updated_at.localeCompare(a.updated_at))[0] ?? null;
+      claimed = await getParticipationWork(pid).catch(() => null);
     } catch (err) {
-      const key = dbErrorKey(err);
-      error = key === 'my.err.generic' || key === 'my.err.notfound' ? t('my.claim.errInvalid') : t(key);
+      error = t(dbErrorKey(err));
     } finally {
       busy = false;
     }
@@ -51,8 +47,8 @@
   {#if done}
     <Notice kind="ok">
       <p><strong>{t('my.claim.ok')}</strong></p>
-      {#if claimed?.work}
-        <p><a href={claimed.work.status === 'published' ? url.work(lang, claimed.work.short_id, tr(claimed.work.title, claimed.work.lang)) : url.my(lang, 'participaciones')}>{tr(claimed.work.title, claimed.work.lang)}</a></p>
+      {#if claimed}
+        <p><a href={claimed.status === 'published' ? url.work(lang, claimed.short_id, tr(claimed.title, claimed.lang)) : url.my(lang, 'participaciones')}>{tr(claimed.title, claimed.lang)}</a></p>
       {:else}
         <p><a href={url.my(lang, 'participaciones')}>{t('my.nav.participations')}</a></p>
       {/if}

@@ -6,6 +6,7 @@ create role authenticated nologin;
 create role service_role nologin bypassrls;
 
 create schema extensions;
+create publication supabase_realtime;
 alter database current_database_placeholder set search_path = "$user", public, extensions;
 
 -- auth ----------------------------------------------------------------------
