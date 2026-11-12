@@ -1,0 +1,89 @@
+/* Tokens de diseño de Rebelarte. Papel, tinta y rojo, como la página «en construcción». */
+:root {
+  --bg: #f6f1e7;
+  --surface: #fffaf1;
+  --surface-2: #efe7d8;
+  --fg: #1c1a17;
+  --muted: #6b645a;
+  --line: #d9d0c0;
+  --accent: #c8321e;
+  --accent-fg: #ffffff;
+  --accent-soft: #f6d9d2;
+  --ok: #2f7a3e;
+  --warn: #9a6a00;
+  --danger: #b3261e;
+  --focus: #1d5fd1;
+
+  --rama-plasticas: #c8321e;
+  --rama-textos: #2d5b8a;
+  --rama-escenicas: #8a3d8f;
+  --rama-sonido: #c47a00;
+  --rama-audiovisuales: #2f7a6b;
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 2px rgb(28 26 23 / 0.06), 0 6px 20px rgb(28 26 23 / 0.06);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --content: 1120px;
+  --gutter: 16px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #14120f;
+    --surface: #1d1a16;
+    --surface-2: #26221c;
+    --fg: #f2ece0;
+    --muted: #a1988a;
+    --line: #332e27;
+    --accent: #ff5a3c;
+    --accent-fg: #14120f;
+    --accent-soft: #3a1d17;
+    --ok: #6cc77f;
+    --warn: #e0b44a;
+    --danger: #ff7a70;
+    --focus: #7aa7ff;
+    --rama-plasticas: #ff7a5f;
+    --rama-textos: #7fb0e0;
+    --rama-escenicas: #d38bd8;
+    --rama-sonido: #f0b347;
+    --rama-audiovisuales: #6cc4b2;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 6px 20px rgb(0 0 0 / 0.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #14120f;
+  --surface: #1d1a16;
+  --surface-2: #26221c;
+  --fg: #f2ece0;
+  --muted: #a1988a;
+  --line: #332e27;
+  --accent: #ff5a3c;
+  --accent-fg: #14120f;
+  --accent-soft: #3a1d17;
+  --ok: #6cc77f;
+  --warn: #e0b44a;
+  --danger: #ff7a70;
+  --focus: #7aa7ff;
+  --rama-plasticas: #ff7a5f;
+  --rama-textos: #7fb0e0;
+  --rama-escenicas: #d38bd8;
+  --rama-sonido: #f0b347;
+  --rama-audiovisuales: #6cc4b2;
+  color-scheme: dark;
+}
+@media (min-width: 720px) {
+  :root { --gutter: 32px; }
+}

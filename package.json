@@ -5,9 +5,32 @@
   "description": "Portal gratuito para promocionar a artistas y sus obras",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run",
+    "test:db": "bash supabase/tests/run.sh",
+    "test:php": "php share/tests/run.php",
+    "build:construccion": "node scripts/build-construccion.mjs"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.11",
+    "@sveltejs/kit": "^2.70.4",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@types/qrcode": "^1.5.6",
+    "svelte": "^5.57.3",
+    "svelte-check": "^4.7.8",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.8",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "pdfjs-dist": "^6.5.438",
+    "qrcode": "^1.5.4"
   }
 }
