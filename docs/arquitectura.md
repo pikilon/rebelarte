@@ -117,6 +117,15 @@ Buckets: `images` (público), `docs` (público: PDF y ZIP), `audio` (público), 
 ### Identificadores cortos
 `short_id` de 8 caracteres base62 generado por función `gen_short_id()` con reintento ante colisión. Lo usan URLs de obra y QR.
 
+### Ajustes de la implementación (12-11-2026)
+- `claim_code` vive en `participation_claims(participation_id, claim_code)`, legible solo por el subidor y borrado al reclamar. El subidor lo lee con la vista `participations_manage` (participaciones + `claim_code`, nulo para los demás).
+- Las RPC fallan con `raise exception '<código>'`: `invalid_alias`, `reserved_alias`, `alias_taken`, `profile_exists`, `already_participating`, `participation_rejected`, `invalid_code`, `recipient_not_accepting`, `rate_limited`, `account_suspended`, `forbidden`, `work_not_found`, `moderation_only`, `attachment_limit`, `invalid_action_for_target`, `invalid_transition`. El frontend los traduce.
+- `profile_public` devuelve 0 o 1 filas (usar `.maybeSingle()`).
+- `moderate()`: obras `hide|restore|delete`; perfiles `suspend_user|unsuspend_user`; adjuntos y mensajes `delete`; premios `verify_award|delete`; cualquiera `dismiss_report`.
+- Los moderadores solo leen mensajes y conversaciones denunciados. Máximo 20 denuncias por hora y una abierta por persona y objetivo.
+- La lectura directa de `works` incluye las `unlisted` (acceso por enlace). Los listados usan siempre `works_cards` o `search_works`.
+- Avatares: máximo 5 MB.
+
 ## 5. Capa PHP (`share/`)
 
 - `.htaccess`: si el archivo existe, se sirve; si no, `index.php`.

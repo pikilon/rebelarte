@@ -130,7 +130,7 @@ export type ContactErrorKey =
 export function friendlyContactError(message: string | null | undefined): ContactErrorKey {
   const m = (message ?? '').toLowerCase();
   if (/rate.?limit|too many|per hour|por hora|l[ií]mite|limit exceeded|demasiad/.test(m)) return 'contact.err.limit';
-  if (/does not accept|not accept|no acepta|not available for|no admite/.test(m)) return 'contact.err.notAccepting';
+  if (/does not accept|not.?accept|no acepta|not available for|no admite/.test(m)) return 'contact.err.notAccepting';
   if (/yourself|oneself|a ti mism|s[ií] mism/.test(m)) return 'contact.err.self';
   if (/suspend/.test(m)) return 'contact.err.suspended';
   if (/profile|perfil/.test(m)) return 'contact.err.noProfile';

@@ -31,7 +31,7 @@ describe('actionsFor', () => {
     expect(actionsFor('profile', 'p1', 'p1').map((x) => x.action)).toEqual(['suspend_user', 'unsuspend_user', 'dismiss_report']);
   });
   it('mensaje sin propietario conocido', () => {
-    expect(actionsFor('message', 'm1').map((x) => x.action)).toEqual(['hide', 'restore', 'dismiss_report']);
+    expect(actionsFor('message', 'm1').map((x) => x.action)).toEqual(['delete', 'dismiss_report']);
   });
   it('destructivas', () => {
     expect(isDestructive('delete')).toBe(true);
@@ -53,5 +53,11 @@ describe('moderateArgs e ids', () => {
     expect(g.profile).toEqual(['p']);
     expect(g.award).toEqual([]);
     expect(reportKey({ target_type: 'work', target_id: 'a' })).toBe('work:a');
+  });
+});
+
+describe('actionsFor (contrato con moderate())', () => {
+  it('premio: verificar o borrar', () => {
+    expect(actionsFor('award', 'a1').map((x) => x.action)).toEqual(['verify_award', 'delete', 'dismiss_report']);
   });
 });

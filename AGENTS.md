@@ -74,9 +74,10 @@ Contienen datos personales, administrativos o financieros. Pueden consultarse so
 
 ## Estado actual
 
-- Especificación funcional en borrador v0.1.
-- Pendiente: decidir los 10 puntos de la sección 10 de la especificación.
-- Pendiente: decidir tecnología. Propuesta sobre la mesa: Supabase (Postgres, autenticación y almacenamiento) con CDN barato (R2 o Bunny) para el audio si crece el tráfico.
+- Especificación funcional v0.2, con decisiones provisionales en la sección 10.
+- Tecnología decidida: SPA SvelteKit + Supabase (acceso sin contraseña) + capa PHP en Hostinger para vistas previas y QR. Ver [docs/arquitectura.md](docs/arquitectura.md).
+- Primera versión de la aplicación implementada y probada sin Supabase real. Pendiente: crear el proyecto Supabase, configurar el correo OTP y desplegar en Hostinger.
+- Textos de interfaz: un archivo por área en `src/lib/i18n/dict/`. No pongas pruebas dentro de esa carpeta.
 - Pendiente: definir la licencia por defecto, los términos de uso y el procedimiento de retirada, con revisión legal antes del lanzamiento.
 - Repositorio: `pikilon/rebelarte` en GitHub, público. Se hace push con la cuenta `pikilon`.
 - Publicado: página «en construcción» (`site/`) en GitHub Pages con el dominio `rebelarte.com`. El CI (`.github/workflows/deploy.yml`) ejecuta `npm run build` y publica `dist/`. El DNS se gestiona en Piensa Solutions.

@@ -49,10 +49,13 @@ export function actionsFor(targetType: ReportTarget, targetId: string, ownerId?:
     case 'profile':
       out.push(spec('suspend_user', 'profile', targetId, true), spec('unsuspend_user', 'profile', targetId, false));
       break;
+    // La BD solo admite borrar adjuntos, mensajes y premios (y verificar premios).
     case 'attachment':
     case 'message':
+      out.push(spec('delete', targetType, targetId, true));
+      break;
     case 'award':
-      out.push(spec('hide', targetType, targetId, false), spec('restore', targetType, targetId, false));
+      out.push(spec('verify_award', 'award', targetId, false), spec('delete', 'award', targetId, true));
       break;
   }
   if (ownerId && targetType !== 'profile') {
