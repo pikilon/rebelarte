@@ -78,7 +78,7 @@ Contienen datos personales, administrativos o financieros. Pueden consultarse so
 - Especificación funcional v0.3, con decisiones provisionales en la sección 10 y borrador de textos legales (alojamiento LSSI/DSA y notificación/retirada).
 - Tecnología decidida: SPA SvelteKit + Supabase (acceso sin contraseña) + capa PHP en Hostinger para vistas previas y QR. Ver [docs/arquitectura.md](docs/arquitectura.md) y [docs/despliegue-hostinger.md](docs/despliegue-hostinger.md).
 - Proyecto Supabase (`jwuqsqwbkfggrycpburv`, `eu-west-3`) creado y reseteado con las 14 migraciones y `seed.sql`.
-- Publicado en pruebas en **`https://beta.rebelarte.com`** (Hostinger, PHP 8.3 + SSL activo). Pendiente: activar el buzón SMTP de Hostinger y subir las plantillas de correo OTP con `npx supabase config push`.
+- Publicado en pruebas en **`https://beta.rebelarte.com`** (Hostinger, PHP 8.3 + SSL activo) y correo OTP de 6 dígitos activo con SMTP de Hostinger (`no-reply@rebelarte.com`).
 - Textos de interfaz: un archivo por área en `src/lib/i18n/dict/`. No pongas pruebas dentro de esa carpeta.
 - Pendiente: definir la licencia por defecto, rellenar los datos de la asociación en los textos legales y hacer revisión legal antes del lanzamiento.
 - Repositorio: `pikilon/rebelarte` en GitHub, público. Se hace push con la cuenta `pikilon`.

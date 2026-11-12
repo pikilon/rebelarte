@@ -68,10 +68,7 @@ si algo falla; `VERBOSE=1` muestra todas las aserciones.
 ## Estado del proyecto remoto (12-11-2026)
 
 - Proyecto `jwuqsqwbkfggrycpburv` (eu-west-3), reseteado con `supabase db reset --linked` y las 14 migraciones + `seed.sql`.
-- **Plantillas de correo**: el plan gratuito de Supabase no permite plantillas propias con el SMTP por defecto
-  (`config push` falla con `entitlement_required`). Están comentadas en `config.toml`; descoméntalas y sube con
-  `npx supabase config push` cuando haya SMTP propio. **Hasta entonces el correo no lleva el código de 6 dígitos**
-  (solo el enlace mágico), y el SMTP por defecto tiene un límite muy bajo de envíos.
+- **SMTP y plantillas de correo**: activados con `no-reply@rebelarte.com` (`smtp.hostinger.com:465`) y subidos con `SUPABASE_SMTP_PASS=... npx supabase config push`. Los correos incluyen tanto el enlace mágico como el código OTP de 6 dígitos (`supabase/templates/`).
 - **Advisors**: la migración 14 corrige `search_path`, funciones de trigger expuestas, `auth.uid()` en políticas RLS,
   políticas permisivas duplicadas e índices de claves foráneas. Quedan, por diseño: las vistas `profiles_public` y
   `works_cards` (SECURITY DEFINER para exponer solo columnas públicas), las funciones `is_*` y las RPC públicas
