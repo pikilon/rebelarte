@@ -71,15 +71,19 @@ Contienen datos personales, administrativos o financieros. Pueden consultarse so
 5. **Git y GitHub**: no crees el repositorio remoto ni hagas push hasta que el usuario lo confirme (cuenta, nombre y visibilidad).
 6. **Decisiones abiertas**: no tomes decisiones marcadas como "Decidir" en la especificación. Propón una opción y pregunta.
 7. **Cambios en la especificación**: si un cambio altera la especificación, actualiza `especificacion-funcional.md` en el mismo cambio y anótalo.
+8. **Svelte 5 (runas)**: usa exclusivamente la sintaxis de Svelte 5 (`$props()`, `$state()`, `$derived()`, `$effect()`, atributos de evento `onclick`, `{@render children?.()}`). No mezcles sintaxis de Svelte 4 (`export let`, `$:`, `on:click`, `<slot>`). Ejecuta siempre `npm run check` antes de dar una tarea por terminada.
 
 ## Estado actual
 
-- Especificación funcional en borrador v0.1.
-- Pendiente: decidir los 10 puntos de la sección 10 de la especificación.
-- Pendiente: decidir tecnología. Propuesta sobre la mesa: Supabase (Postgres, autenticación y almacenamiento) con CDN barato (R2 o Bunny) para el audio si crece el tráfico.
-- Pendiente: definir la licencia por defecto, los términos de uso y el procedimiento de retirada, con revisión legal antes del lanzamiento.
+- Especificación funcional v0.3, con decisiones provisionales en la sección 10 y borrador de textos legales (alojamiento LSSI/DSA y notificación/retirada).
+- Tecnología decidida: SPA SvelteKit + Supabase (acceso sin contraseña) + capa PHP en Hostinger para vistas previas y QR. Ver [docs/arquitectura.md](docs/arquitectura.md) y [docs/despliegue-hostinger.md](docs/despliegue-hostinger.md).
+- Proyecto Supabase (`jwuqsqwbkfggrycpburv`, `eu-west-3`) creado y reseteado con las 14 migraciones y `seed.sql`.
+- Publicado en pruebas en **`https://beta.rebelarte.com`** (Hostinger, PHP 8.3 + SSL activo) y correo OTP de 6 dígitos activo con SMTP de Hostinger (`no-reply@rebelarte.com`).
+- Textos de interfaz: un archivo por área en `src/lib/i18n/dict/`. No pongas pruebas dentro de esa carpeta.
+- Diseño 2.0 (24-11-2026): marca, paleta e iconos de rama reinterpretados de los recursos originales del Drive. Ver [docs/diseno.md](docs/diseno.md). Logo e iconos viven en `src/lib/brand.ts`; tras cambiarlos ejecuta `npm run build:marca`.
+- Pendiente: definir la licencia por defecto, rellenar los datos de la asociación en los textos legales y hacer revisión legal antes del lanzamiento.
 - Repositorio: `pikilon/rebelarte` en GitHub, público. Se hace push con la cuenta `pikilon`.
-- Publicado: página «en construcción» (`site/`) en GitHub Pages con el dominio `rebelarte.com`. El CI (`.github/workflows/deploy.yml`) ejecuta `npm run build` y publica `dist/`. El DNS se gestiona en Piensa Solutions.
+- Dominio principal: página «en construcción» (`site/`) en GitHub Pages con `rebelarte.com` (`.github/workflows/deploy.yml` ejecuta `npm run build:construccion`). El DNS se gestiona en Piensa Solutions y tiene un wildcard `*` A apuntando a Hostinger para subdominios.
 
 ## Glosario rápido
 
