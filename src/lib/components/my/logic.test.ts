@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dbErrorKey, aliasProblem, authErrorKey, BRANCH_FIELDS, draftToRow, emptyWorkDraft, formatDuration, isOtpCode, moveItem,
-  normalizeKeywords, parseDuration, parseWorkRef, rolesForBranch, rolesToInput, safeNext, saveActions, statusPatch,
-  suggestAlias, validateDraft
+  dbErrorKey, aliasProblem, authErrorKey, BRANCH_FIELDS, draftToRow, emptyWorkDraft, formatDuration, isOtpCode,
+  matchCatalogRole, mergeCatalogRoles, moveItem, normalizeKeywords, normalizeRoleText, parseDuration, parseWorkRef,
+  roleLabelMatches, rolesForBranch, rolesToInput, safeNext, saveActions, slugifyRole, statusPatch, suggestAlias,
+  validateDraft
 } from './logic';
 import type { RoleCatalogItem } from '$lib/types';
 
@@ -81,9 +82,11 @@ describe('duración', () => {
 
 describe('cargos', () => {
   const cat: RoleCatalogItem[] = [
-    { id: 1, branch: null, slug: 'autor', name: { es: 'Autor' }, sort: 1 },
-    { id: 2, branch: 'sonido', slug: 'mezcla', name: { es: 'Mezcla' }, sort: 1 },
-    { id: 3, branch: 'textos', slug: 'editor', name: { es: 'Editor' }, sort: 1 }
+    { id: 1, branch: null, slug: 'autor', name: { es: 'Autor/a', en: 'Author' }, sort: 1 },
+    { id: 2, branch: 'sonido', slug: 'mezcla', name: { es: 'Mezcla', en: 'Mixing' }, sort: 1 },
+    { id: 3, branch: 'textos', slug: 'editor', name: { es: 'Editor/a', en: 'Editor' }, sort: 1 },
+    { id: 4, branch: 'audiovisuales', slug: 'actor-protagonista', name: { es: 'Actor/actriz protagonista', en: 'Lead actor' }, sort: 2 },
+    { id: 5, branch: 'plasticas', slug: 'fotografo', name: { es: 'Fotógrafo/a', en: 'Photographer' }, sort: 1 }
   ];
   it('filtra por rama con globales al final', () => {
     expect(rolesForBranch(cat, 'sonido').map((r) => r.id)).toEqual([2, 1]);
@@ -93,6 +96,22 @@ describe('cargos', () => {
     expect(rolesToInput({ roleIds: [2], others: ['  Foley  artist ', 'foley artist', ''] })).toEqual([
       { role_id: 2 }, { role_text: 'Foley artist' }
     ]);
+  });
+  it('normaliza y genera slug para Jev', () => {
+    expect(normalizeRoleText('  Dirección  de   Fotografía ')).toBe('direccion de fotografia');
+    expect(slugifyRole('Diseño de Vestuario!!')).toBe('diseno-de-vestuario');
+  });
+  it('reconoce coincidencias y variantes de género en el catálogo', () => {
+    expect(roleLabelMatches('Autor/a', 'autora')).toBe(true);
+    expect(roleLabelMatches('Fotógrafo/a', 'fotografa')).toBe(true);
+    expect(roleLabelMatches('Actor/actriz protagonista', 'actriz protagonista')).toBe(true);
+    expect(matchCatalogRole(cat, 'plasticas', 'Fotógrafa')?.id).toBe(5);
+    expect(matchCatalogRole(cat, 'audiovisuales', 'Actriz protagonista')?.id).toBe(4);
+    expect(matchCatalogRole(cat, 'textos', 'Fotógrafa')).toBeNull();
+  });
+  it('une cargos nuevos on-the-fly sin duplicar', () => {
+    const extra: RoleCatalogItem = { id: 99, branch: 'audiovisuales', slug: 'colorista', name: { es: 'Colorista', en: 'Colorist' }, sort: 50 };
+    expect(mergeCatalogRoles(cat, [extra, cat[0]]).map((r) => r.id)).toEqual([1, 2, 3, 4, 5, 99]);
   });
 });
 

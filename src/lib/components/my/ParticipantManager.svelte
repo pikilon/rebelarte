@@ -17,7 +17,7 @@
   import { dbErrorKey, normalizeAlias, rolesToInput, type RoleSelection } from './logic';
 
   interface Props { workId: string; branch: BranchId | null; uploaderId: string; catalog: RoleCatalogItem[] }
-  let { workId, branch, uploaderId, catalog }: Props = $props();
+  let { workId, branch, uploaderId, catalog = $bindable() }: Props = $props();
 
   const lang = $derived(currentLang());
   const uid = $props.id();
@@ -200,7 +200,7 @@
             <input id="{uid}-g" type="text" bind:value={guestName} maxlength="80" required />
           </Field>
         {/if}
-        <RolePicker {catalog} {branch} bind:selection={sel} />
+        <RolePicker bind:catalog {branch} bind:selection={sel} />
         <div class="row">
           <Button type="submit" loading={busy}>{mode === 'invite' ? t('my.part.sendInvite') : t('my.part.createGuest')}</Button>
           <Button type="button" variant="ghost" onclick={() => (mode = 'none')}>{t('common.cancel')}</Button>

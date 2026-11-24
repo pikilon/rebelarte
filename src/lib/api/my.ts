@@ -1,10 +1,11 @@
 // Consultas y acciones de «Mi Rebelarte». Usa los nombres del contrato (docs/arquitectura.md §4).
 import { supabase, unwrap } from '$lib/supabase';
 import type {
-  Attachment, Award, Category, CvEntry, CvEntryKind, I18nText, Lang, License, Participation, ParticipationRole,
-  Profile, ProfilePublic, RoleCatalogItem, RoleInput, Work, WorkCard
+  Attachment, Award, BranchId, Category, CvEntry, CvEntryKind, I18nText, Lang, License, Participation, ParticipationRole,
+  Profile, ProfilePublic, RoleCatalogItem, RoleInput, RoleJudgeResult, Work, WorkCard
 } from '$lib/types';
 import { removeAttachmentFiles, removeAvatar, uploadAvatar } from '$lib/media/upload';
+import { registerPublicCatalogRole } from './public';
 
 // ---------- Catálogos (se cargan una vez) ----------
 let catalogCache: Promise<{ categories: Category[]; roles: RoleCatalogItem[]; licenses: License[] }> | null = null;
@@ -26,6 +27,41 @@ export function loadCatalogs() {
     throw e;
   });
   return catalogCache;
+}
+
+/** Incorpora a las cachés de catálogos un cargo aprobado y creado «on the fly». */
+export function registerCatalogRole(role: RoleCatalogItem): void {
+  registerPublicCatalogRole(role);
+  if (!catalogCache) return;
+  catalogCache = catalogCache.then((c) =>
+    c.roles.some((r) => r.id === role.id) ? c : { ...c, roles: [...c.roles, role] }
+  );
+}
+
+/**
+ * Invoca al juez de decisiones (Jev) para evaluar si un cargo propuesto corresponde
+ * a la rama de la obra y, si procede, crearlo «on the fly» en `role_catalog`.
+ */
+export async function judgeRoleOnTheFly(branch: BranchId, rawRole: string): Promise<RoleJudgeResult> {
+  const { data, error } = await supabase.functions.invoke<RoleJudgeResult>('judge-role', {
+    body: { branch, rawRole: rawRole.trim() }
+  });
+  if (error) {
+    let code = error.message;
+    try {
+      const ctx = (error as unknown as { context?: Response }).context;
+      if (ctx && typeof ctx.json === 'function') {
+        const body = (await ctx.json()) as { error?: string };
+        if (body?.error) code = body.error;
+      }
+    } catch {
+      // mantener mensaje original
+    }
+    throw new Error(code);
+  }
+  if (!data) throw new Error('internal_error');
+  if (data.role) registerCatalogRole(data.role);
+  return data;
 }
 
 // ---------- Perfil ----------

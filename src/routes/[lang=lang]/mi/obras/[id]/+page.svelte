@@ -107,7 +107,7 @@
     </Section>
 
     <Section title={t('my.work.s.people')} id="people">
-      <ParticipantManager workId={work.id} branch={work.branch} uploaderId={work.uploader_id} catalog={roles} />
+      <ParticipantManager workId={work.id} branch={work.branch} uploaderId={work.uploader_id} bind:catalog={roles} />
     </Section>
 
     <Section title={t('my.work.s.danger')} id="danger">

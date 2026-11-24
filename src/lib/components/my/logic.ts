@@ -168,6 +168,78 @@ export function rolesForBranch(catalog: readonly RoleCatalogItem[], branch: Bran
     .sort((a, b) => (a.branch === b.branch ? a.sort - b.sort : a.branch === null ? 1 : -1));
 }
 
+/** Normaliza el texto de un cargo propuesto (sin tildes, minúsculas, espacios colapsados). */
+export function normalizeRoleText(raw: string): string {
+  return raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** Convierte un nombre de cargo en slug kebab-case ASCII. */
+export function slugifyRole(raw: string): string {
+  return normalizeRoleText(raw)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 50)
+    .replace(/-+$/g, '');
+}
+
+/** Comprueba coincidencia con una etiqueta del catálogo (incluyendo variantes «/a» y «/actriz»). */
+export function roleLabelMatches(catalogLabel: string | undefined, normInput: string): boolean {
+  if (!catalogLabel || !normInput) return false;
+  const cat = normalizeRoleText(catalogLabel);
+  if (!cat) return false;
+  if (normInput === cat) return true;
+  const masc = cat.replace(/([a-z]+)\/actriz\b/g, '$1').replace(/([a-z]+)\/a\b/g, '$1');
+  if (normInput === masc) return true;
+  const fem = cat
+    .replace(/[a-z]+\/actriz\b/g, 'actriz')
+    .replace(/([a-z]+or)\/a\b/g, '$1a')
+    .replace(/([a-z]+)o\/a\b/g, '$1a')
+    .replace(/([a-z]+)\/a\b/g, '$1a');
+  return normInput === fem;
+}
+
+/** Busca en el catálogo cargado si el texto propuesto ya coincide con un cargo de la rama o global. */
+export function matchCatalogRole(
+  catalog: readonly RoleCatalogItem[],
+  branch: BranchId | null,
+  rawInput: string
+): RoleCatalogItem | null {
+  const norm = normalizeRoleText(rawInput);
+  const sl = slugifyRole(rawInput);
+  if (!norm) return null;
+  const candidates = rolesForBranch(catalog, branch);
+  return (
+    candidates.find(
+      (r) =>
+        r.slug === sl ||
+        roleLabelMatches(r.name.es, norm) ||
+        roleLabelMatches(r.name.en, norm)
+    ) ?? null
+  );
+}
+
+/** Une el catálogo base con cargos creados «on the fly» sin duplicar ids. */
+export function mergeCatalogRoles(
+  base: readonly RoleCatalogItem[],
+  extra: readonly RoleCatalogItem[]
+): RoleCatalogItem[] {
+  if (!extra.length) return [...base];
+  const seen = new Set(base.map((r) => r.id));
+  const out = [...base];
+  for (const r of extra) {
+    if (!seen.has(r.id)) {
+      seen.add(r.id);
+      out.push(r);
+    }
+  }
+  return out;
+}
+
 // ---------- Obras ----------
 export const WORK_VISIBILITIES: readonly WorkVisibility[] = ['public', 'unlisted', 'private'];
 
@@ -308,7 +380,8 @@ export const WORK_STATUS_FILTERS: readonly (WorkStatus | 'all')[] = ['all', 'dra
 // Las RPC lanzan códigos en minúsculas como mensaje (`raise exception 'already_participating'`).
 export type DbErrorKey =
   | 'my.err.duplicate' | 'my.err.forbidden' | 'my.err.notfound' | 'my.err.generic' | 'my.err.already'
-  | 'my.err.noAuthor' | 'my.err.code' | 'my.err.rejectedBefore' | 'my.err.own' | 'my.err.transition' | 'my.err.roles';
+  | 'my.err.noAuthor' | 'my.err.code' | 'my.err.rejectedBefore' | 'my.err.own' | 'my.err.transition' | 'my.err.roles'
+  | 'my.err.rateLimited';
 
 const DB_MESSAGES: Record<string, DbErrorKey> = {
   alias_taken: 'my.err.duplicate',
@@ -324,6 +397,7 @@ const DB_MESSAGES: Record<string, DbErrorKey> = {
   roles_required: 'my.err.roles',
   too_many_roles: 'my.err.roles',
   invalid_role: 'my.err.roles',
+  rate_limited: 'my.err.rateLimited',
   forbidden: 'my.err.forbidden',
   account_suspended: 'my.err.forbidden'
 };

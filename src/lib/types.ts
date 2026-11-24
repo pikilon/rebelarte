@@ -164,6 +164,15 @@ export interface ParticipationRole {
 /** Entrada de cargos para RPC: cargo de catálogo o texto libre. */
 export type RoleInput = { role_id: number } | { role_text: string };
 
+export type RoleJudgeDecisionKind = 'approved_new' | 'matched_existing' | 'rejected';
+
+export interface RoleJudgeResult {
+  decision: RoleJudgeDecisionKind;
+  cached?: boolean;
+  role: RoleCatalogItem | null;
+  reason: I18nText;
+}
+
 export interface Award {
   id: string;
   name: I18nText;

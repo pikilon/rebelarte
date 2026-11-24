@@ -27,7 +27,10 @@ Cada campo del CV tiene visibilidad propia: público, solo usuarios registrados,
 ## 3. Participaciones
 
 - Varios autores pueden participar en una misma obra con uno o varios cargos (actor protagonista, modelo, fotógrafo…).
-- El cargo puede ser de un catálogo por rama o texto libre: **provisional, ver §10**.
+- **Catálogo de cargos y juez automático (Jev)**: cada rama cuenta con su catálogo de cargos (`role_catalog`). Cuando un usuario propone un cargo nuevo desde la opción «Proponer otro cargo», un juez automático con IA evalúa en tiempo real («on the fly») si el cargo tiene sentido artístico o técnico para la rama de esa obra:
+  - Si ya existe en el catálogo (o es sinónimo / variante de género), enlaza directamente al cargo existente.
+  - Si es un cargo válido y coherente con la rama, lo da de alta en el acto en `role_catalog` (con nombres en `es`/`en` y `slug`) para que quede disponible en esa obra y para futuros usuarios.
+  - Si no es válido para esa rama o no es un cargo artístico/técnico legítimo, lo rechaza mostrando de inmediato el motivo al usuario e impidiendo añadirlo.
 - Cada participación pasa por estados: pendiente, aceptada, rechazada, retirada por el autor.
 - **Aceptación por defecto**: las participaciones se aceptan automáticamente al solicitarlas. El subidor recibe notificación y puede rechazarlas o retirarlas a posteriori. El autor participante puede retirarse en cualquier momento.
 - El rechazo puede ser parcial: se pueden aceptar unos cargos y rechazar otros de la misma solicitud. Pedido explícito en los textos originales.
@@ -98,7 +101,7 @@ Adoptadas el 12-11-2026 como provisionales. Sustituyen a los **Decidir** de las 
 
 1. **Adjuntos**: máximo 6 por obra y 6 en el CV. Límites: imagen 10 MB, PDF 20 MB, ZIP 10 MB, audio 30 MB.
 2. **Audio**: se admiten enlace/embed (SoundCloud, Bandcamp) y subida directa a almacenamiento con CDN.
-3. **Cargos**: catálogo por rama más texto libre en la opción «otro».
+3. **Cargos**: catálogo por rama ampliable «on the fly» mediante juez automático con IA (Jev), que valida la coherencia del cargo propuesto con la rama de la obra, detecta equivalentes existentes, crea el nuevo cargo en `role_catalog` (`es`/`en`) si procede o lo rechaza mostrando el motivo al usuario.
 4. **Participantes sin cuenta**: sí. El subidor los lista con nombre y cargo, y reciben un código para reclamar la participación.
 5. **Varios subidores**: no en la primera versión.
 6. **Premios**: mixto (autodeclarado con sello «verificado» que pone la moderación). Los participantes aceptados de una obra premiada lo ven en su CV como premio de la obra.
@@ -109,6 +112,7 @@ Adoptadas el 12-11-2026 como provisionales. Sustituyen a los **Decidir** de las 
 
 ### Historial de cambios
 
+- v0.4 (12-11-2026): integración del juez automático de decisiones (Jev) para validar y dar de alta «on the fly» cargos nuevos en participaciones según la rama de la obra (`role_catalog` + `role_judge_decisions` + Edge Function `judge-role`).
 - v0.3 (12-11-2026): actualización de la sección legal (Aviso Legal, Condiciones de Uso y Política de Privacidad en es/en) incorporando régimen de alojamiento e intermediación (art. 16 LSSI / arts. 6 y 8 DSA), garantía e indemnidad del autor, participaciones con derecho de rechazo, procedimiento de notificación y retirada (art. 16 DSA) y ausencia de garantías del servicio. La licencia por defecto se mantiene como punto abierto («Decidir»).
 - v0.2 (12-11-2026): acceso sin contraseña; decisiones provisionales de la sección 10; enlace al diseño técnico.
 

@@ -42,6 +42,14 @@ export async function loadCatalogsSafe(): Promise<Catalogs> {
   }
 }
 
+/** Incorpora a la caché pública un cargo creado en tiempo real por el juez Jev. */
+export function registerPublicCatalogRole(role: RoleCatalogItem): void {
+  if (!catalogsPromise) return;
+  catalogsPromise = catalogsPromise.then((c) =>
+    c.roles.some((r) => r.id === role.id) ? c : { ...c, roles: [...c.roles, role] }
+  );
+}
+
 /* ───────── Listados ───────── */
 
 export interface WorkFilter { branch?: BranchId | null; categoryId?: number | null }

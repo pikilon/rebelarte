@@ -95,3 +95,24 @@ select t.anon();
 select t.ok((select via_work_id = (select id from w where k='pub') from public.cv_awards(t.carol())), 'cv_awards: premio heredado de la obra');
 select t.eq(t.n($$select 1 from public.cv_awards(t.bob())$$), 0::bigint, 'el rechazado no hereda el premio');
 select t.eq(t.n($$select 1 from public.cv_awards(t.alice())$$), 1::bigint, 'el subidor también');
+
+-- Jev: juez de cargos on-the-fly (catálogo, variantes de género, creación y rechazo)
+select t.login(t.alice());
+select t.eq((select (public.resolve_existing_or_cached_role('plasticas', 'Fotógrafa')->'role'->>'slug')), 'fotografo', 'Jev: variante femenina coincide con Fotógrafo/a');
+select t.eq((select (public.resolve_existing_or_cached_role('audiovisuales', 'Actriz protagonista')->'role'->>'slug')), 'actor-protagonista', 'Jev: Actriz protagonista coincide con Actor/actriz protagonista');
+select t.ok(public.resolve_existing_or_cached_role('audiovisuales', 'Colorista') is null, 'Jev: cargo nuevo sin evaluar devuelve null en caché');
+select t.fails($$select public.record_role_judge_decision(t.alice(), 'audiovisuales', 'Colorista', 'approved_new', 'colorista', '{"es":"Colorista","en":"Colorist"}')$$, 'permission denied', 'Jev: cliente no puede invocar record_role_judge_decision directamente');
+
+select t.owner();
+select t.eq((select public.record_role_judge_decision(t.alice(), 'audiovisuales', 'Colorista', 'approved_new', 'colorista', '{"es":"Colorista","en":"Colorist"}', null, '{"es":"Cargo válido en posproducción audiovisual.","en":"Valid role in audiovisual post-production."}')->>'decision'), 'approved_new', 'Jev: aprueba y crea cargo nuevo on the fly');
+select t.eq((select name->>'en' from public.role_catalog where branch = 'audiovisuales' and slug = 'colorista'), 'Colorist', 'Jev: cargo creado en role_catalog con traducción');
+select t.eq((select public.record_role_judge_decision(t.alice(), 'textos', 'Foquista', 'rejected', null, null, null, '{"es":"Propio de audiovisuales.","en":"Belongs to audiovisuals."}')->>'decision'), 'rejected', 'Jev: registra rechazo con motivo');
+
+select t.login(t.bob());
+select t.eq((select public.resolve_existing_or_cached_role('audiovisuales', '  colorista ')->'role'->>'slug'), 'colorista', 'Jev: segundo usuario obtiene el cargo recién creado');
+select t.eq((select public.resolve_existing_or_cached_role('textos', 'foquista')->>'decision'), 'rejected', 'Jev: caché devuelve el rechazo para esa rama');
+select t.eq(t.n($$select 1 from public.role_judge_decisions$$), 0::bigint, 'Jev: RLS oculta decisiones de otros usuarios a un usuario normal');
+select t.login(t.alice());
+select t.eq(t.n($$select 1 from public.role_judge_decisions$$), 2::bigint, 'Jev: el autor ve sus propias decisiones');
+select t.login(t.mod());
+select t.eq(t.n($$select 1 from public.role_judge_decisions$$), 2::bigint, 'Jev: moderación ve todas las decisiones');

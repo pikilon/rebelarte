@@ -169,7 +169,7 @@
       {#if found}
         <div class="found stack">
           <p><strong>{tr(found.title, found.lang)}</strong> <span class="muted">· {found.uploader_name} · {t(`branch.${found.branch}`)}</span></p>
-          <RolePicker {catalog} branch={found.branch} bind:selection={sel} legend={t('my.parts.yourRoles')} />
+          <RolePicker bind:catalog branch={found.branch} bind:selection={sel} legend={t('my.parts.yourRoles')} />
           {#if refError}<Notice kind="error">{refError}</Notice>{/if}
           <div class="row">
             <Button type="button" loading={requesting} onclick={request}>{t('my.parts.send')}</Button>

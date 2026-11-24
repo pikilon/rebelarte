@@ -17,6 +17,7 @@ const es: Record<string, string> = {
   'my.err.own': 'No puedes hacer esto con tu propia participación.',
   'my.err.transition': 'Esa participación ya no admite este cambio.',
   'my.err.roles': 'Revisa los cargos elegidos.',
+  'my.err.rateLimited': 'Has hecho demasiadas solicitudes seguidas. Espera un poco e inténtalo de nuevo.',
 
   // navegación
   'my.nav.label': 'Mi Rebelarte',
@@ -92,8 +93,14 @@ const es: Record<string, string> = {
   'my.i18n.optionalNote': 'Traducción opcional. Si falta, se muestra el original con un aviso.',
   'my.chips.remove': 'Quitar {k}',
   'my.roles.legend': 'Cargos',
-  'my.roles.other': 'Otro cargo (texto libre)',
-  'my.roles.otherPh': 'Por ejemplo: regidor de sonido',
+  'my.roles.other': 'Proponer nuevo cargo para esta rama',
+  'my.roles.otherHint': 'Jev comprobará al instante si el cargo corresponde a este tipo de obra y lo añadirá al catálogo.',
+  'my.roles.otherPh': 'Por ejemplo: colorista, vestuario, maquetación…',
+  'my.roles.validateAdd': 'Validar y añadir',
+  'my.roles.judging': 'Evaluando…',
+  'my.roles.judgeApproved': 'Cargo «{role}» aprobado e incorporado al catálogo de esta rama.',
+  'my.roles.judgeMatched': 'Equivale al cargo «{role}» del catálogo; ha quedado seleccionado.',
+  'my.roles.judgeRejected': 'Ese cargo no corresponde a este tipo de obra.',
   'my.roles.count': '{n} de {max} cargos',
 
   // perfil
@@ -381,6 +388,7 @@ const en: Record<string, string> = {
   'my.err.own': 'You cannot do this with your own participation.',
   'my.err.transition': 'That participation no longer allows this change.',
   'my.err.roles': 'Check the roles you chose.',
+  'my.err.rateLimited': 'Too many requests in a short time. Wait a moment and try again.',
 
   'my.nav.label': 'My Rebelarte',
   'my.nav.summary': 'Overview',
@@ -451,8 +459,14 @@ const en: Record<string, string> = {
   'my.i18n.optionalNote': 'Translation is optional. If missing, the original is shown with a notice.',
   'my.chips.remove': 'Remove {k}',
   'my.roles.legend': 'Roles',
-  'my.roles.other': 'Other role (free text)',
-  'my.roles.otherPh': 'For example: sound designer',
+  'my.roles.other': 'Propose a new role for this branch',
+  'my.roles.otherHint': 'Jev will immediately verify whether the role fits this type of work and add it to the catalog.',
+  'my.roles.otherPh': 'For example: colorist, costume design, typesetting…',
+  'my.roles.validateAdd': 'Validate & add',
+  'my.roles.judging': 'Evaluating…',
+  'my.roles.judgeApproved': 'Role “{role}” approved and added to this branch’s catalog.',
+  'my.roles.judgeMatched': 'Matches the existing role “{role}” in the catalog; it has been selected.',
+  'my.roles.judgeRejected': 'That role does not fit this type of work.',
   'my.roles.count': '{n} of {max} roles',
 
   'my.profile.avatar': 'Profile photo',

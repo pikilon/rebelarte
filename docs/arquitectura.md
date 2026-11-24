@@ -65,7 +65,8 @@ Esquema `public`. Todas las tablas con RLS activada. Los textos traducibles son 
 ### Catálogos
 - `branches` (`id text pk` en `plasticas|textos|escenicas|sonido|audiovisuales`, `name jsonb`, `sort int`).
 - `categories` (`id serial`, `branch text fk`, `slug text`, `name jsonb`, `sort int`, unique `(branch, slug)`).
-- `role_catalog` (`id serial`, `branch text fk null` = válido en todas, `slug text`, `name jsonb`, `sort int`).
+- `role_catalog` (`id serial`, `branch text fk null` = válido en todas, `slug text`, `name jsonb`, `sort int`, índice único sobre `(coalesce(branch, '*'), slug)`).
+- `role_judge_decisions` (`id uuid pk`, `branch text fk`, `raw_input text`, `normalized_input text`, `decision text` en `approved|matched_existing|rejected`, `role_id int fk → role_catalog`, `proposed_slug text`, `proposed_name jsonb`, `reason jsonb`, `model text`, `requested_by uuid fk → profiles`, `created_at`). Registra y cachea las decisiones del juez automático Jev (`judge-role` Edge Function).
 - `licenses` (`id text pk`: `cc-by-nc-nd-4.0` por defecto, `cc-by-4.0`, `cc-by-sa-4.0`, `cc-by-nc-4.0`, `cc-by-nc-sa-4.0`, `cc-by-nd-4.0`, `cc0`, `all-rights-reserved`; `name jsonb`, `url text`).
 
 ### Perfiles y CV
@@ -83,7 +84,8 @@ Esquema `public`. Todas las tablas con RLS activada. Los textos traducibles son 
 
 ### Participaciones
 - `participations`: `id uuid`, `work_id`, `profile_id null` (null = participante sin cuenta), `guest_name text null`, `claim_code text null unique` (para reclamar), `status` (`pending|accepted|rejected|withdrawn`), `created_by`, `note text`, `created_at`, `updated_at`. Unique `(work_id, profile_id)`.
-- `participation_roles`: `id uuid`, `participation_id`, `role_id null → role_catalog`, `role_text text null` (cargo libre «otro»), `status` (`accepted|rejected`), `sort`.
+- `participation_roles`: `id uuid`, `participation_id`, `role_id null → role_catalog`, `role_text text null` (respaldo histórico), `status` (`accepted|rejected`), `sort`.
+- **Juez automático de cargos (Jev — `supabase/functions/judge-role`)**: cuando un usuario propone un cargo que no figura en `role_catalog` para la rama de la obra, el frontend consulta primero equivalencias/caché (`resolve_existing_or_cached_role`) y, si es inédito, invoca la Edge Function `judge-role`. Esta evalúa si el cargo tiene cabida en esa rama artística (combinando diccionario experto por rama y LLM Gemini opcional si `GEMINI_API_KEY` está configurada), registra la decisión mediante `record_role_judge_decision` (máx. 30 evaluaciones/hora por usuario) y, si es válido, crea el cargo «on the fly» en `role_catalog` (con nombres en `es`/`en` y `slug`) devolviendo su `role_id`. Si no corresponde a la rama, devuelve `rejected` con la explicación en `es`/`en`.
 - El subidor tiene participación propia creada automáticamente al crear la obra (cargo «autor/a»).
 - Reglas (todas por RPC `security definer`; no hay `insert/update` directos sobre estas tablas):
   - `request_participation(work_id, roles jsonb)`: el autor se apunta; queda `accepted` con todos los cargos `accepted`; notifica al subidor.
