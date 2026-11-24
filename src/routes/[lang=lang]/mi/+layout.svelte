@@ -5,6 +5,7 @@
   import { currentLang, t } from '$lib/i18n';
   import { url } from '$lib/routes';
   import Avatar from '$lib/components/ui/Avatar.svelte';
+  import SectionIcon from '$lib/components/ui/SectionIcon.svelte';
   import Spinner from '$lib/components/ui/Spinner.svelte';
 
   let { children } = $props();
@@ -83,7 +84,7 @@
       <nav aria-label={t('my.nav.label')}>
         <ul>
           {#each items as it (it.sub)}
-            <li><a href={url.my(lang, it.sub)} aria-current={active(it.sub) ? 'page' : undefined} class:on={active(it.sub)}>{it.label}</a></li>
+            <li><a href={url.my(lang, it.sub)} aria-current={active(it.sub) ? 'page' : undefined} class:on={active(it.sub)}><SectionIcon name={it.sub} size={20} />{it.label}</a></li>
           {/each}
           <li><button type="button" onclick={logout}>{t('nav.logout')}</button></li>
         </ul>
@@ -98,14 +99,14 @@
   .side { min-width: 0; }
   .who { display: none; }
   nav ul { list-style: none; margin: 0; padding: 0 0 var(--space-2); display: flex; gap: var(--space-1); overflow-x: auto; scrollbar-width: thin; }
-  nav a, nav button { display: block; white-space: nowrap; padding: 10px 14px; border-radius: 999px; text-decoration: none; font-weight: 500; font-size: 0.92rem; border: 0; background: transparent; cursor: pointer; min-height: 44px; }
+  nav a, nav button { display: flex; align-items: center; gap: 10px; white-space: nowrap; padding: 10px 14px; border-radius: 999px; text-decoration: none; font-weight: 500; font-size: 0.92rem; border: 0; background: transparent; cursor: pointer; min-height: 44px; }
   nav a:hover, nav button:hover { background: var(--surface-2); color: var(--fg); }
-  nav a.on { background: var(--fg); color: var(--bg); }
+  nav a.on { background: var(--brand); color: var(--brand-ink); }
   nav button { color: var(--muted); }
   .content { min-width: 0; }
   @media (min-width: 880px) {
     .shell { grid-template-columns: 220px minmax(0, 1fr); gap: var(--space-6); padding-top: var(--space-6); align-items: start; }
-    .side { position: sticky; top: 80px; }
+    .side { position: sticky; top: calc(var(--header-h) + var(--space-5)); }
     .who { display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-4); }
     .names { display: grid; min-width: 0; }
     .names strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

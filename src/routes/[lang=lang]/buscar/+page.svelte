@@ -65,7 +65,7 @@
   const branchChips = $derived<Chip[]>([
     { label: t('public.filter.allBranches'), href: searchHref(lang, { q }), active: !rama },
     ...BRANCHES.map((b) => ({
-      label: t(`branch.${b}`), href: searchHref(lang, { q, rama: b }), active: rama === b, color: `var(--rama-${b})`
+      label: t(`branch.${b}`), href: searchHref(lang, { q, rama: b }), active: rama === b, color: `var(--rama-${b})`, branch: b
     }))
   ]);
   const categoryChips = $derived<Chip[]>(

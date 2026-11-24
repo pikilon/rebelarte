@@ -4,6 +4,7 @@
   import { currentLang, t } from '$lib/i18n';
   import { url } from '$lib/routes';
   import Button from '$lib/components/ui/Button.svelte';
+  import SectionIcon from '$lib/components/ui/SectionIcon.svelte';
   import Notice from '$lib/components/ui/Notice.svelte';
   import { countMyWorks, listMyParticipations, unreadMessages } from '$lib/api/my';
 
@@ -55,6 +56,7 @@
       <li>
         <a class="card" href={url.my(lang, c.sub)}>
           <span class="top">
+            <span class="ic"><SectionIcon name={c.sub} size={26} /></span>
             <strong>{c.title}</strong>
             {#if c.count !== null}
               <span class="n" class:badge={c.badge && c.count > 0} aria-label={String(c.count)}>{c.count}</span>
@@ -70,9 +72,11 @@
 <style>
   h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
   .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-  .card { display: grid; gap: var(--space-2); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--space-4); text-decoration: none; height: 100%; }
-  .card:hover { border-color: var(--accent); color: inherit; }
-  .top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); font-family: var(--font-display); font-size: 1.1rem; }
+  .card { display: grid; gap: var(--space-3); align-content: start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--space-5); text-decoration: none; height: 100%; transition: translate 0.2s, box-shadow 0.2s, border-color 0.2s; }
+  .card:hover { border-color: var(--accent); color: inherit; translate: 0 -2px; box-shadow: var(--shadow); }
+  .ic { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--accent-soft); color: var(--brand); }
+  .top { display: flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-size: 1.15rem; }
+  .top .n { margin-left: auto; }
   .n { font-family: var(--font-ui); font-weight: 700; min-width: 28px; text-align: center; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); font-size: 0.85rem; }
   .n.badge { background: var(--accent); color: var(--accent-fg); }
 </style>

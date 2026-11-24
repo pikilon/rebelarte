@@ -17,6 +17,7 @@
   import Notice from '$lib/components/ui/Notice.svelte';
   import Spinner from '$lib/components/ui/Spinner.svelte';
   import WorkCardView from '$lib/components/ui/WorkCard.svelte';
+  import BranchIcon from '$lib/components/ui/BranchIcon.svelte';
   import ContactButton from '$lib/components/contact/ContactButton.svelte';
   import ReportButton from '$lib/components/report/ReportButton.svelte';
   import AwardList, { type AwardItem } from '$lib/components/public/AwardList.svelte';
@@ -118,7 +119,7 @@
   <Meta title={profile.display_name} description={metaDesc} />
   <article class="container cv">
     <header class="head">
-      <Avatar path={profile.avatar_path} name={profile.display_name} size={104} />
+      <span class="ring"><Avatar path={profile.avatar_path} name={profile.display_name} size={112} /></span>
       <div class="who">
         <h1>{profile.display_name}</h1>
         {#if hl}<p class="hl"><LangText text={profile.headline} origin={profile.lang} /></p>{/if}
@@ -173,7 +174,7 @@
               <button type="button" class="chip" class:on={!fBranch} aria-pressed={!fBranch} onclick={() => { fBranch = null; fCat = null; }}>{t('public.filter.allBranches')}</button>
               {#each galleryBranches as b (b)}
                 <button type="button" class="chip" class:on={fBranch === b} aria-pressed={fBranch === b} style:--c="var(--rama-{b})"
-                  onclick={() => { fBranch = b; fCat = null; }}>{t(`branch.${b}`)}</button>
+                  onclick={() => { fBranch = b; fCat = null; }}><BranchIcon branch={b} size={16} /> {t(`branch.${b}`)}</button>
               {/each}
             </div>
             {#if galleryCats.length > 1}
@@ -205,7 +206,7 @@
             <p class="muted">{t('public.cv.noWorks')}</p>
           {:else}
             {#each worksByBranch as g (g.branch)}
-              <h3 class="bh" style:--c="var(--rama-{g.branch})">{t(`branch.${g.branch}`)}</h3>
+              <h3 class="bh" style:--c="var(--rama-{g.branch})"><BranchIcon branch={g.branch} badge size={28} /> {t(`branch.${g.branch}`)}</h3>
               <ul class="wl">
                 {#each g.items as w (w.id)}
                   {@const wt = tr(w.title, w.lang)}
@@ -262,11 +263,13 @@
 <style>
   .pad { padding-top: var(--space-7); }
   .cv { padding-top: var(--space-6); }
-  .head { display: flex; gap: var(--space-5); align-items: flex-start; flex-wrap: wrap; }
+  .ring { flex: none; display: inline-flex; border-radius: 50%; padding: 4px; background: conic-gradient(from 200deg, var(--rama-plasticas-vivid), var(--rama-textos-vivid), var(--rama-escenicas-vivid), var(--rama-sonido-vivid), var(--rama-audiovisuales-vivid), var(--rama-plasticas-vivid)); }
+  .ring :global(img), .ring :global(span) { box-shadow: 0 0 0 4px var(--bg); }
+  .head { display: flex; gap: var(--space-5); align-items: center; flex-wrap: wrap; padding: var(--space-6); border-radius: calc(var(--radius) * 1.5); background: radial-gradient(500px 240px at 0% 0%, color-mix(in srgb, var(--brand) 12%, transparent), transparent 70%), var(--surface); border: 1px solid var(--line); }
   .who { flex: 1; min-width: min(100%, 260px); display: grid; gap: var(--space-2); }
-  .who h1 { margin: 0; font-size: clamp(1.9rem, 5vw, 3rem); overflow-wrap: anywhere; }
+  .who h1 { margin: 0; font-size: clamp(2rem, 5.5vw, 3.4rem); overflow-wrap: anywhere; }
   .who p { margin: 0; }
-  .hl { font-size: 1.15rem; font-family: var(--font-display); }
+  .hl { font-size: 1.2rem; font-family: var(--font-display); font-weight: 500; color: var(--brand); }
   .meta { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); font-size: 0.92rem; }
   .loc { display: inline-flex; align-items: center; gap: 4px; }
   .mail { overflow-wrap: anywhere; }
@@ -283,10 +286,10 @@
   .sections h2 { font-size: 1.5rem; padding-bottom: var(--space-2); border-bottom: 1px solid var(--line); }
   .letter { font-size: 1.05rem; }
   .sm { font-size: 0.9rem; }
-  .bh { font-size: 1rem; font-family: var(--font-ui); color: var(--c); text-transform: uppercase; letter-spacing: 0.1em; margin: var(--space-4) 0 var(--space-2); }
+  .bh { display: flex; align-items: center; gap: 10px; font-size: 1.05rem; color: var(--c); margin: var(--space-5) 0 var(--space-3); }
   .wl { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
-  .wl li { display: flex; gap: var(--space-3); align-items: center; border-left: 4px solid var(--c); padding-left: var(--space-3); }
-  .th { flex: none; width: 64px; height: 48px; border-radius: 4px; overflow: hidden; background: var(--surface-2); }
+  .wl li { display: flex; gap: var(--space-3); align-items: center; padding: var(--space-2); padding-right: var(--space-4); border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--c); }
+  .th { flex: none; width: 72px; height: 54px; border-radius: 6px; overflow: hidden; background: color-mix(in srgb, var(--c) 12%, var(--surface-2)); }
   .th img { width: 100%; height: 100%; object-fit: cover; }
   .wi { display: grid; min-width: 0; }
   .wt { font-weight: 600; font-family: var(--font-display); font-size: 1.05rem; text-decoration: none; overflow-wrap: anywhere; }
@@ -298,7 +301,7 @@
   .filters { display: grid; gap: var(--space-3); margin-bottom: var(--space-5); }
   .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .chip { --c: var(--fg); display: inline-flex; align-items: center; min-height: 36px; padding: 4px 14px; border-radius: 999px; border: 1px solid var(--c);
-    color: var(--c); background: transparent; cursor: pointer; font-size: 0.9rem; font-weight: 500; }
+    color: var(--c); background: transparent; cursor: pointer; font-size: 0.9rem; font-weight: 500; gap: 6px; }
   .chip:hover { background: color-mix(in srgb, var(--c) 12%, transparent); }
   .chip.on { background: var(--c); color: var(--bg); }
   .plain { list-style: none; padding: 0; margin: 0; }
@@ -310,6 +313,9 @@
 
   @media print {
     :global(.top), :global(.foot), :global(.skip) { display: none !important; }
+    .head { padding: 0; border: 0; background: none; }
+    .ring { background: none; padding: 0; }
+    .wl li { border: 0; padding: 0; }
     :global(body) { background: #fff !important; color: #000 !important; font-size: 11pt; }
     .tabs, .actions, .filters { display: none !important; }
     .print-only { display: block; font-size: 9pt; color: #444; margin-top: 4pt; }

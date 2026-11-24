@@ -9,6 +9,7 @@
   import Field from '$lib/components/ui/Field.svelte';
   import Notice from '$lib/components/ui/Notice.svelte';
   import Spinner from '$lib/components/ui/Spinner.svelte';
+  import Logo from '$lib/components/ui/Logo.svelte';
   import { authErrorKey, isEmail, isOtpCode, safeNext } from '$lib/components/my/logic';
 
   const COOLDOWN = 60;
@@ -128,6 +129,7 @@
     {:else}
       {#if urlError}<Notice kind="error">{urlError}</Notice>{/if}
       {#if step === 'email'}
+        <Logo size={56} wordmark={false} />
         <h1>{t('my.login.title')}</h1>
         <p class="muted">{t('my.login.lead')}</p>
         <form class="stack" onsubmit={send} novalidate>

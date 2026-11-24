@@ -94,7 +94,7 @@
   <article class="container work" style:--c="var(--rama-{work.branch})">
     <header class="hd">
       <div class="tags">
-        <Tag branch={work.branch} href={url.branch(lang, work.branch)}>{t(`branch.${work.branch}`)}</Tag>
+        <Tag branch={work.branch} icon href={url.branch(lang, work.branch)}>{t(`branch.${work.branch}`)}</Tag>
         {#if category}
           <Tag branch={work.branch} href="{url.branch(lang, work.branch)}?categoria={encodeURIComponent(category.slug)}">{tr(category.name)}</Tag>
         {/if}
@@ -195,20 +195,20 @@
 <style>
   .pad { padding-top: var(--space-7); }
   .work { padding-top: var(--space-5); }
-  .hd { display: grid; gap: var(--space-3); margin-bottom: var(--space-5); border-top: 4px solid var(--c); padding-top: var(--space-4); }
-  .hd h1 { margin: 0; overflow-wrap: anywhere; font-size: clamp(1.9rem, 5vw, 3rem); }
+  .hd { display: grid; gap: var(--space-3); margin-bottom: var(--space-6); padding-bottom: var(--space-5); border-bottom: 1px solid var(--line); }
+  .hd h1 { margin: 0; overflow-wrap: anywhere; font-size: clamp(2rem, 5.5vw, 3.6rem); }
   .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .by { gap: var(--space-2) var(--space-3); }
   .cols { display: grid; gap: var(--space-6); grid-template-columns: minmax(0, 1fr); align-items: start; }
   @media (min-width: 900px) {
     .cols { grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); }
-    .side { position: sticky; top: 80px; }
+    .side { position: sticky; top: calc(var(--header-h) + 64px); }
   }
   .main { display: grid; gap: var(--space-6); min-width: 0; }
   .main h2 { font-size: 1.3rem; }
   .side { display: grid; gap: var(--space-4); min-width: 0; }
-  .card { background: var(--surface); border-radius: var(--radius); padding: var(--space-4); box-shadow: var(--shadow); }
-  .card h2 { font-size: 1.05rem; font-family: var(--font-ui); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; margin-bottom: var(--space-3); }
+  .card { background: var(--surface); border-radius: var(--radius); padding: var(--space-5); border: 1px solid var(--line); }
+  .card h2 { font-size: 0.76rem; font-family: var(--font-ui); text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); font-weight: 700; margin-bottom: var(--space-3); }
   dl { margin: 0; display: grid; gap: var(--space-2); }
   dl > div { display: grid; grid-template-columns: minmax(90px, 36%) 1fr; gap: var(--space-2); }
   dt { color: var(--muted); font-size: 0.9rem; }

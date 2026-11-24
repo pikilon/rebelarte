@@ -80,6 +80,7 @@ Contienen datos personales, administrativos o financieros. Pueden consultarse so
 - Proyecto Supabase (`jwuqsqwbkfggrycpburv`, `eu-west-3`) creado y reseteado con las 14 migraciones y `seed.sql`.
 - Publicado en pruebas en **`https://beta.rebelarte.com`** (Hostinger, PHP 8.3 + SSL activo) y correo OTP de 6 dígitos activo con SMTP de Hostinger (`no-reply@rebelarte.com`).
 - Textos de interfaz: un archivo por área en `src/lib/i18n/dict/`. No pongas pruebas dentro de esa carpeta.
+- Diseño 2.0 (24-11-2026): marca, paleta e iconos de rama reinterpretados de los recursos originales del Drive. Ver [docs/diseno.md](docs/diseno.md). Logo e iconos viven en `src/lib/brand.ts`; tras cambiarlos ejecuta `npm run build:marca`.
 - Pendiente: definir la licencia por defecto, rellenar los datos de la asociación en los textos legales y hacer revisión legal antes del lanzamiento.
 - Repositorio: `pikilon/rebelarte` en GitHub, público. Se hace push con la cuenta `pikilon`.
 - Dominio principal: página «en construcción» (`site/`) en GitHub Pages con `rebelarte.com` (`.github/workflows/deploy.yml` ejecuta `npm run build:construccion`). El DNS se gestiona en Piensa Solutions y tiene un wildcard `*` A apuntando a Hostinger para subdominios.
